@@ -1,0 +1,70 @@
+/* v62 user-side membership card + admin membership settings card (existing gold / dark palette) */
+.reseller-card{margin:14px 0;padding:18px;border-radius:16px;border:1px solid rgba(212,175,55,.45);background:linear-gradient(160deg,rgba(212,175,55,.10),rgba(255,255,255,.02));box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.reseller-card .rs-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.reseller-card .rs-title{font-weight:800;letter-spacing:.08em}
+.reseller-card .rs-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:5px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.2);opacity:.9}
+.reseller-card .rs-badge.on{color:#3ddc84;border-color:#3ddc84}
+.reseller-card .rs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.reseller-card .rs-cell{padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.07)}
+.reseller-card .rs-cell span{display:block;font-size:10px;letter-spacing:.1em;opacity:.65;margin-bottom:4px}
+.reseller-card .rs-cell b{font-size:22px;color:var(--gold,#d4af37)}
+.reseller-card .rs-desc{opacity:.88;line-height:1.5;margin:8px 0}
+.reseller-card .rs-note{font-size:12px;opacity:.65;margin-top:8px}
+.reseller-card .rs-success{padding:10px 12px;border-radius:10px;background:rgba(61,220,132,.12);border:1px solid rgba(61,220,132,.4);color:#3ddc84;font-weight:700}
+.reseller-card .rs-msg{margin:10px 0;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.05);font-size:13px}
+.reseller-card .rs-msg.warn{background:rgba(255,170,0,.12);border:1px solid rgba(255,170,0,.4)}
+.reseller-card .rs-msg.ok{background:rgba(61,220,132,.12);border:1px solid rgba(61,220,132,.4)}
+.reseller-card .rs-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.reseller-card .rs-btn{flex:1 1 180px;text-align:center;padding:12px 16px;border-radius:12px;border:0;background:var(--gold,#d4af37);color:#111;font-weight:800;cursor:pointer;text-decoration:none}
+.reseller-card .rs-btn.ghost{background:transparent;color:var(--gold,#d4af37);border:1px solid var(--gold,#d4af37)}
+.reseller-card .rs-btn[disabled]{opacity:.5;cursor:not-allowed}
+.reseller-card [hidden]{display:none!important}
+@media(max-width:480px){.reseller-card .rs-grid{grid-template-columns:1fr}.reseller-card .rs-cell b{font-size:20px}}
+
+/* ---------- Admin: Users -> Reseller Membership (loaded from admin.php) ---------- */
+.admin-membership-bar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;max-width:100%}
+.admin-membership-bar select{min-height:40px;border-radius:12px;padding:0 12px;background:#0d1424;color:#fff;border:1px solid rgba(212,175,55,.35);max-width:100%}
+.admin-membership-bar .admin-user-action{flex:1 1 200px}
+.admin-membership-card{margin:12px 0;max-width:100%}
+.amc,.amc *{box-sizing:border-box}
+.amc{max-width:100%;border:1px solid rgba(212,175,55,.45);border-radius:18px;padding:18px;background:linear-gradient(160deg,rgba(212,175,55,.09),rgba(10,16,32,.92));box-shadow:0 8px 28px rgba(0,0,0,.35);color:#e9edf5;overflow:hidden}
+.amc-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.amc-title{font-family:'Chakra Petch',sans-serif;font-weight:700;letter-spacing:.08em;font-size:16px;color:#f5d56a;overflow-wrap:anywhere}
+.amc-state{font-size:11px;font-weight:800;letter-spacing:.1em;padding:6px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.25);white-space:nowrap}
+.amc-state.on{color:#3ddc84;border-color:#3ddc84;background:rgba(61,220,132,.1)}
+.amc-state.off{color:#ff7a7a;border-color:#ff7a7a;background:rgba(255,122,122,.08)}
+.amc-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.amc-stat{padding:12px;border-radius:14px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.08);min-width:0}
+.amc-stat span{display:block;font-size:10px;letter-spacing:.12em;opacity:.65;margin-bottom:4px}
+.amc-stat b{font-size:24px;color:#f5d56a}
+.amc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.amc-field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.amc-field.full{grid-column:1/-1}
+.amc-field>label,.amc-label{font-size:11px;letter-spacing:.1em;font-weight:700;color:rgba(233,237,245,.7)}
+.amc-field small{opacity:.55;font-size:11px;line-height:1.35}
+.amc-input-wrap{display:flex;align-items:center;min-width:0;border:1px solid rgba(255,255,255,.2);border-radius:12px;overflow:hidden;background:rgba(0,0,0,.3)}
+.amc-input-wrap:focus-within,.amc textarea:focus{border-color:#d4af37;box-shadow:0 0 0 3px rgba(212,175,55,.18)}
+.amc-input-wrap span{padding:0 12px;color:#f5d56a;font-weight:800;font-size:12px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.12);align-self:stretch;display:flex;align-items:center}
+.amc-input-wrap input,.amc textarea{flex:1;min-width:0;width:100%;border:0;background:transparent;color:#fff;padding:12px;font:inherit;font-size:15px;outline:0}
+.amc textarea{border:1px solid rgba(255,255,255,.2);border-radius:12px;background:rgba(0,0,0,.3);resize:vertical;min-height:84px}
+.amc-switch{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.25);cursor:pointer;min-width:0}
+.amc-switch-text{flex:1;min-width:0;font-size:13px;overflow-wrap:anywhere}
+.amc-switch input{-webkit-appearance:none;appearance:none;position:relative;flex:0 0 46px;width:46px;height:26px;margin:0;border-radius:999px;background:#3a4152;border:1px solid rgba(255,255,255,.25);cursor:pointer;transition:background .18s,border-color .18s}
+.amc-switch input::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .18s}
+.amc-switch input:checked{background:#2fbf71;border-color:#2fbf71}
+.amc-switch input:checked::after{left:22px}
+.amc-switch input:focus-visible{outline:2px solid #d4af37;outline-offset:2px}
+.amc-onoff{flex:0 0 auto;min-width:34px;text-align:right;font-size:11px;letter-spacing:.1em}
+.amc-onoff.on{color:#3ddc84}.amc-onoff.off{color:#ff7a7a}
+.amc-actions{margin-top:16px}
+.amc-save{width:100%;padding:13px 20px;border-radius:12px;border:0;background:linear-gradient(180deg,#f5d56a,#d4af37);color:#161208;font-weight:800;letter-spacing:.05em;cursor:pointer}
+.amc-save[disabled]{opacity:.55;cursor:not-allowed}
+.amc-hist{margin-top:16px}
+.amc-hist summary{cursor:pointer;font-weight:700;color:#f5d56a}
+.amc-table-wrap{overflow:auto;max-height:280px;margin-top:10px;border-radius:12px;border:1px solid rgba(255,255,255,.08);-webkit-overflow-scrolling:touch}
+.amc-table-wrap table{width:100%;font-size:12px;border-collapse:collapse;min-width:760px}
+.amc-table-wrap th{position:sticky;top:0;background:#101a30;font-size:10px;letter-spacing:.08em}
+.amc-table-wrap th,.amc-table-wrap td{padding:8px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.07);white-space:nowrap}
+.amc-table-wrap .amc-user{max-width:180px;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:640px){.amc{padding:14px;border-radius:16px}.amc-grid{grid-template-columns:1fr}.amc-stat b{font-size:21px}.amc-title{font-size:14px}}
+@media(max-width:360px){.amc-stats{grid-template-columns:1fr}.amc-switch{gap:8px;padding:10px}}

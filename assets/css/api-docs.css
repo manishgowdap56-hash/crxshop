@@ -1,0 +1,42 @@
+/* =====================================================================
+   API Documentation page (from original).
+   ===================================================================== */
+.api-docs-page{display:none;min-height:100vh;background:#070b14;color:#eef2f8;padding:12px 16px 42px;box-sizing:border-box;overflow:auto}
+.api-docs-page.active{display:block}
+.api-docs-wrap{width:min(100%,760px);margin:0 auto}
+.api-docs-topbar{height:42px;display:flex;align-items:center;justify-content:space-between;color:#9aa6bf;font:700 9px var(--font-mono);letter-spacing:1.5px}
+.api-docs-back{border:0;background:none;color:#d8b653;font:700 9px var(--font-mono);cursor:pointer;padding:6px 0;text-decoration:none}
+.api-docs-hero,.api-doc-section{background:#111b31;border:1px solid rgba(201,169,97,.42);border-radius:22px;padding:20px 18px;margin-bottom:12px;box-shadow:0 14px 30px rgba(0,0,0,.16)}
+.api-docs-kicker,.api-doc-section-title{color:#d9b84f;font:800 10px var(--font-mono);letter-spacing:2.5px;margin-bottom:12px}
+.api-docs-hero h2{margin:0 0 8px;color:#eef2f8;font:800 18px var(--font-mono);letter-spacing:1px}
+.api-docs-hero p,.api-doc-section>p,.api-doc-tip,.endpoint-card p{margin:0;color:#9aa6bf;font:600 10px/1.65 var(--font-mono)}
+.api-auth-label{color:#9aa6bf;font:800 10px var(--font-mono);letter-spacing:1.5px;margin:12px 0 7px}
+.api-doc-code-row{position:relative;background:#080310;border:1px solid rgba(106,83,153,.45);border-radius:15px;padding:16px 94px 16px 15px;overflow:hidden}
+.api-doc-code-row code{display:block;color:#d8c6f1;font:600 10px/1.6 var(--font-mono);white-space:nowrap;overflow:auto}
+.api-doc-copy{position:absolute;right:10px;top:10px;border:1px solid rgba(201,169,97,.48);background:rgba(201,169,97,.12);color:#d8b653;border-radius:12px;padding:8px 11px;font:800 9px var(--font-mono);cursor:pointer}
+.api-docs-page a{color:#d8b653}
+.api-code-block{margin:0;background:#080310;border:1px solid rgba(106,83,153,.45);border-radius:15px;padding:18px 15px;color:#d8c6f1;font:600 10px/1.65 var(--font-mono);overflow:auto;white-space:pre;min-height:300px}
+.endpoint-card{background:#111b31;border:1px solid rgba(105,128,164,.28);border-radius:17px;padding:16px 14px;margin-top:12px}
+.endpoint-heading{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.endpoint-heading code{color:#eef2f8;font:700 15px var(--font-mono)}
+.method-badge{background:#303038;color:#e0bd58;border-radius:9px;padding:5px 10px;font:800 9px var(--font-mono)}
+.method-badge.post{padding-inline:14px}
+.alias{color:#9aa6bf;font:600 9px var(--font-mono)}
+.endpoint-table{display:grid;grid-template-columns:1fr 1fr 1.45fr;margin-top:14px;font:600 9px/1.5 var(--font-mono);color:#9aa6bf}
+.endpoint-table>div{padding:9px 7px;border-bottom:1px solid rgba(105,128,164,.18)}
+.endpoint-table>div:nth-child(-n+3){font-weight:800;color:#9aa6bf}
+.endpoint-table code{color:#eef2f8}
+.endpoint-table .required{color:#ff5c62;font-weight:800}
+.endpoint-table .optional{color:#9aa6bf;font-weight:800}
+.endpoint-return{margin-top:11px!important;text-align:center}
+.endpoint-return code{color:#aeb5ca}
+@media(max-width:700px){
+ .api-docs-page{padding:8px 10px 28px}
+ .api-docs-hero,.api-doc-section{padding:17px 12px;border-radius:18px}
+ .api-docs-hero h2{font-size:15px}
+ .api-code-block{font-size:9px;min-height:270px}
+ .endpoint-heading code{font-size:13px}
+ .endpoint-table{font-size:8px;grid-template-columns:.9fr .9fr 1.35fr}
+ .api-doc-code-row{padding-right:82px}
+ .api-doc-copy{font-size:8px;padding:7px 9px}
+}

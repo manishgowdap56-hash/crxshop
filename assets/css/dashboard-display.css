@@ -1,0 +1,48 @@
+/* =====================================================================
+   Dashboard display (3 rotating slides) + floating Telegram support.
+   Uses the site's existing navy surfaces, gold accent (#d8b765 / #e0bd35),
+   glow, radius and mono typography. Loaded as a versioned page CSS.
+   ===================================================================== */
+
+/* ---- 3-slide display ------------------------------------------------ */
+.dash-display{position:relative;box-sizing:border-box;width:100%;max-width:100%;margin:0 0 18px;padding:5px;
+  border:1.5px solid rgba(216,183,101,.62);border-radius:28px;
+  background:linear-gradient(180deg,#131d36,#0b1325);
+  box-shadow:0 0 0 1px rgba(216,183,101,.08),0 12px 30px rgba(0,0,0,.38),0 0 24px rgba(216,183,101,.13)}
+/* Fixed 16:7 frame for EVERY image (padding-top technique = works in all mobile WebViews, no layout shift) */
+.dash-display .dd-viewport{position:relative;width:100%;overflow:hidden;border-radius:22px;background:#0a1426}
+.dash-display .dd-viewport::before{content:"";display:block;padding-top:43.75%}
+.dash-display .dd-slide{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;
+  opacity:0;transition:opacity .9s ease;pointer-events:none;-webkit-user-select:none;user-select:none}
+.dash-display .dd-slide.active{opacity:1}
+
+/* Gold diamond accents centred on the frame's four sides (they sit on the border, not over the picture) */
+.dash-display .dd-gem{position:absolute;z-index:2;width:11px;height:11px;border-radius:2px;
+  background:linear-gradient(135deg,#f6dd8e,#c9a345);border:1px solid rgba(255,238,178,.75);
+  box-shadow:0 0 10px rgba(216,183,101,.6),0 0 2px rgba(0,0,0,.6);transform:translate(-50%,-50%) rotate(45deg);pointer-events:none}
+.dash-display .dd-gem.top{left:50%;top:-1px}
+.dash-display .dd-gem.bottom{left:50%;top:calc(100% + 1px)}
+.dash-display .dd-gem.left{left:-1px;top:50%}
+.dash-display .dd-gem.right{left:calc(100% + 1px);top:50%}
+
+@media (max-width:700px){
+  .dash-display{margin-bottom:14px;padding:4px;border-radius:19px}
+  .dash-display .dd-viewport{border-radius:15px}
+  .dash-display .dd-gem{width:9px;height:9px}
+}
+@media (prefers-reduced-motion:reduce){.dash-display .dd-slide{transition:none}}
+
+/* ---- Floating Telegram support (bottom-right) ------------------------ */
+.tg-support-fab{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(16px,calc(env(safe-area-inset-bottom) + 12px));z-index:60;
+  display:inline-flex;align-items:center;gap:7px;box-sizing:border-box;height:40px;padding:0 15px 0 12px;
+  border:1px solid rgba(216,183,101,.7);border-radius:999px;text-decoration:none;
+  background:linear-gradient(180deg,rgba(20,31,56,.97),rgba(10,17,33,.97));color:#e6c85a;
+  font:800 10px/1 var(--font-mono,monospace);letter-spacing:1.3px;
+  box-shadow:0 8px 22px rgba(0,0,0,.45),0 0 16px rgba(216,183,101,.2),inset 0 1px 0 rgba(255,235,160,.12);
+  transition:.18s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.tg-support-fab svg{flex:none;width:15px;height:15px}
+.tg-support-fab:hover{border-color:#e0bd35;color:#f4dc86;transform:translateY(-1px);box-shadow:0 10px 26px rgba(0,0,0,.5),0 0 20px rgba(216,183,101,.3),inset 0 1px 0 rgba(255,235,160,.16)}
+.tg-support-fab:active{transform:scale(.95)}
+/* keeps the last dashboard row from ever sitting under the floating button */
+.tg-support-spacer{height:58px}
+@media (min-width:701px){.tg-support-fab{right:26px;bottom:24px;height:44px;padding:0 18px 0 14px;font-size:11px}.tg-support-fab svg{width:17px;height:17px}}

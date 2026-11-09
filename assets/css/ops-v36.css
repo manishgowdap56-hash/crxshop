@@ -1,0 +1,52 @@
+/* v36 admin additions. Additive only: reuses the existing admin.css classes / colors / fonts (.admin-kpi, .ao-*, .ops-*). */
+.fin-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:26px 0 12px}
+.fin-sub{color:#7f8ca5;font:700 10px var(--font-mono);letter-spacing:1px}
+.fin-grid{margin-bottom:22px}
+.fin-grid .admin-kpi{min-height:132px}
+.fin-clickable{cursor:pointer;transition:filter .15s,transform .15s}
+.fin-clickable:hover{filter:brightness(1.1)}
+.fin-clickable:active{transform:scale(.985)}
+.fin-clickable:focus-visible{outline:2px solid #d8b765;outline-offset:2px}
+.fin-banner{margin:0 0 14px;padding:11px 14px;border-radius:12px;font:800 11px/1.5 var(--font-mono);letter-spacing:.4px}
+.fin-banner[hidden]{display:none}
+.fin-banner-warn{border:1px solid rgba(233,199,102,.55);background:rgba(233,199,102,.09);color:#e9c766}
+
+.po-banners{display:grid;gap:8px;margin:0 0 12px}
+.po-banner{padding:10px 12px;border-radius:10px;font:800 11px/1.45 var(--font-mono);border:1px solid}
+.po-ok{color:#21d17b;border-color:rgba(33,209,123,.45);background:rgba(33,209,123,.07)}
+.po-warn{color:#e9c766;border-color:rgba(233,199,102,.5);background:rgba(233,199,102,.08)}
+.po-bad{color:#ff9aa2;border-color:rgba(255,92,104,.5);background:rgba(255,92,104,.09)}
+.po-config{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:12px 0 6px}
+.po-config label{display:flex;flex-direction:column;gap:5px;color:#7d8aa3;font:800 9px var(--font-mono);letter-spacing:1px;min-width:0}
+.po-config input,.po-config select{height:38px;border:1px solid rgba(201,169,97,.3);border-radius:10px;background:#0d172b;color:#edf1f7;font:800 11px var(--font-mono);padding:0 9px;max-width:100%;box-sizing:border-box}
+.po-config input{width:150px}
+.po-meta{margin:0 0 12px;color:#7f8ca5;font:700 10px/1.5 var(--font-mono);word-break:break-word}
+.po-h{margin:24px 0 10px;color:#d8b765;font:900 11px var(--font-mono);letter-spacing:2px}
+.po-recent{display:grid;gap:7px}
+.po-recent-row{padding:9px 11px;border:1px solid rgba(201,169,97,.2);border-radius:10px;background:#0b1527;color:#aab4c8;font:600 10.5px/1.5 var(--font-mono);word-break:break-word}
+.po-recent-row b{color:#f1d98f}
+.po-recent-row span{color:#8e9ab3}
+.po-recent-row.ok{border-color:rgba(33,209,123,.4)}
+.po-recent-row.bad{border-color:rgba(255,92,104,.45)}
+.po-reason{width:100%;height:40px;margin-bottom:8px;padding:0 10px;border:1px solid #2a3956;border-radius:8px;background:#0b1730;color:#eef1f8;font:600 12px var(--font-mono);box-sizing:border-box}
+@media (max-width:760px){
+  .fin-head{margin-top:20px}
+  .fin-grid .admin-kpi{min-height:118px}
+  .po-config label,.po-config input,.po-config select{width:100%}
+  .po-config .ao-clear{flex:1 1 140px}
+}
+
+/* v38: order-state chips, state filter cards, decision filters. Additive; reuses existing colors. */
+.ao-status.s-expired{color:#ffb347;border-color:rgba(255,179,71,.55)}
+.ao-status.s-review{color:#c792ff;border-color:rgba(199,146,255,.55)}
+.ao-status.s-proc{color:#5cc8ff;border-color:rgba(92,200,255,.55)}
+.ao-status.s-manual{color:#5cc8ff;border-color:rgba(92,200,255,.55)}
+.po-states{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.po-card{text-align:left;cursor:pointer;font:inherit;color:inherit}
+.po-card:hover{filter:brightness(1.12)}
+.po-card.on{border-color:rgba(216,183,101,.95);box-shadow:0 0 0 2px rgba(216,183,101,.12)}
+.po-card span{display:block}
+.po-note{grid-column:1/-1;color:#7f8ca5;font:700 9px/1.5 var(--font-mono)}
+.ao-filters input[type="date"],.po-dfilters input[type="search"]{height:38px;border:1px solid rgba(201,169,97,.3);border-radius:10px;background:#0d172b;color:#edf1f7;font:800 10px var(--font-mono);padding:0 8px;max-width:100%;box-sizing:border-box;min-width:0}
+.po-dfilters{margin-top:6px}
+@media (max-width:760px){.po-states{grid-template-columns:repeat(2,minmax(0,1fr))}.ao-filters input[type="date"]{flex:1 1 130px}}

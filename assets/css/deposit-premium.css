@@ -1,0 +1,40 @@
+/* v67 - Deposit QR + Payment Success: PRESENTATION ONLY.
+   No QR logic, no payment logic. The QR <img> is never filtered, recoloured, blended or overlaid: it sits on a pure white quiet zone
+   (required for reliable scanning). Colours use the site's theme variables, so Master Frontend Control restyles this page too. */
+.deposit-wrap:has(#depositPaymentView:not([hidden])){max-width:560px}
+.deposit-payment-view{padding:10px 0 28px}
+.payment-topline{padding:0 4px 12px;font:800 13px var(--font-mono);letter-spacing:1.2px;color:var(--text,#e5e8ef)}
+.payment-brand{display:flex;align-items:center;gap:9px}
+.payment-brand-logo{width:28px;height:28px;border-radius:8px;object-fit:cover;border:1px solid var(--border-soft,rgba(201,169,97,.4));background:#fff}
+.payment-secure{font-size:11px;padding:5px 11px;color:var(--green,#4de38c);border-color:var(--green,#4de38c)}
+.payment-card{border:1px solid var(--border-soft,rgba(201,169,97,.4));border-radius:22px;padding:22px 16px 18px;
+  background:linear-gradient(160deg,var(--card2,#141f36) 0%,var(--card,#101a2c) 60%,var(--bg2,#0d1429) 100%);
+  box-shadow:0 18px 50px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.03)}
+.payment-kicker{font-size:12px;letter-spacing:2.4px;color:var(--muted,#8d98b2)}
+.payment-amount{font-size:clamp(36px,11vw,52px);margin:4px 0 14px;color:var(--gold,#e4c15c);letter-spacing:-.5px}
+.payment-order-grid{grid-template-columns:auto 1fr;gap:6px 14px;padding:10px 14px;margin:0 0 6px;border:1px solid var(--border,#25324a);border-radius:12px;
+  background:rgba(0,0,0,.18);font:600 12px var(--font-mono);color:var(--muted,#7e89a2)}
+.payment-order-grid strong{font-size:13px;color:var(--text,#d6dbe7)}
+/* LARGE QR with a premium four-sided frame: gold outer ring -> dark gap -> white quiet zone -> QR */
+.payment-qr-frame{width:min(100%,360px);aspect-ratio:1/1;height:auto;margin:18px auto 14px;padding:16px;background:#fff;border:0;border-radius:20px;
+  box-shadow:0 0 0 4px var(--gold,#e6cf82),0 0 0 9px var(--card,#101a2c),0 0 0 11px var(--gold-dark,#a3822f),0 14px 36px rgba(0,0,0,.45)}
+.payment-qr-frame img,.payment-qr-frame svg{width:100%;height:100%;display:block;filter:none!important;mix-blend-mode:normal!important;opacity:1!important;image-rendering:pixelated}
+.payment-download{width:min(100%,360px);height:44px;font-size:13px;border-radius:12px;border-color:var(--border-soft,#263554);background:var(--card2,#0d172b);color:var(--text,#d7dce6)}
+.payment-expiry{font-size:14px;margin:12px 0;color:var(--muted,#8a96ad)}
+.payment-expiry strong{font:800 20px var(--font-mono);color:var(--gold,#e4c15c);margin-left:4px}
+.payment-status{width:min(100%,360px);min-height:46px;font-size:14px;border-radius:12px;background:rgba(0,0,0,.22);font-weight:700}
+.payment-steps{list-style:none;counter-reset:s;margin:14px auto;padding:0;max-width:360px;display:grid;gap:8px}
+.payment-steps li{counter-increment:s;display:flex;align-items:center;gap:10px;font:600 13px var(--font-body);color:var(--text,#d6dbe7)}
+.payment-steps li:before{content:counter(s);flex:0 0 24px;height:24px;border-radius:50%;display:grid;place-items:center;font:800 12px var(--font-mono);
+  background:var(--gold-soft,rgba(201,169,97,.14));color:var(--gold,#e4c15c);border:1px solid var(--border-soft,rgba(201,169,97,.4))}
+.payment-footnotes{flex-wrap:wrap;gap:8px 16px;font-size:11.5px;color:var(--muted,#9ca5b7)}
+.payment-cancel{height:46px;font-size:13px;border-radius:12px;margin-top:12px;border-color:var(--border,#263554);background:var(--card,#111a2e);color:var(--text,#d8dce5)}
+/* Payment Success */
+.pay-result-card.success{border-radius:26px;padding:28px 18px 24px;border-color:var(--green,rgba(62,225,138,.5));background:linear-gradient(160deg,var(--card2,#141f36),var(--card,#101a2c))}
+.pay-logo-frame{width:84px;height:84px;margin:0 auto 14px;padding:5px;border-radius:24px;background:linear-gradient(135deg,var(--gold,#e4c15c),var(--gold-dark,#a3822f));box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.pay-logo-frame img{width:100%;height:100%;display:block;border-radius:19px;object-fit:cover;background:#fff}
+.pay-result-title.success{font-size:20px}
+.pay-result-amount{font-size:34px;color:var(--text,#f0eee8)}
+.pay-result-order,.pay-result-balance{margin:0 auto 10px;font:700 11px var(--font-mono);letter-spacing:1px;color:var(--muted,#8995ad)}
+.pay-result-order strong{color:var(--text,#e4e8f0);margin-left:6px;word-break:break-all}
+@media(max-width:520px){.deposit-wrap:has(#depositPaymentView:not([hidden])){max-width:100%}.payment-card{padding:18px 12px 16px}.payment-qr-frame{width:min(100%,86vw);padding:12px}}

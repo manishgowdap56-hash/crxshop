@@ -1,0 +1,17 @@
+.mon{max-width:1200px;margin:0 auto;padding:16px}
+.mon-top{display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:12px}
+.mon-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.mon-tabs button,.mon button{border:1px solid rgba(255,255,255,.2);background:transparent;color:inherit;border-radius:8px;padding:8px 12px;cursor:pointer}
+.mon-tabs button.on{background:#ff8a00;color:#000;font-weight:700}
+.mon-sched{padding:10px;border-radius:8px;margin-bottom:12px;background:rgba(255,255,255,.06);font-size:13px}
+.mon-sched.bad{border:1px solid #e5484d}.mon-sched.ok{border:1px solid #30a46c}
+.mon-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:12px}
+.mon-tile{padding:10px;border-radius:8px;background:rgba(255,255,255,.06)}.mon-tile b{display:block;font-size:20px}
+.mon-wrap{overflow-x:auto}.mon table{width:100%;border-collapse:collapse;font-size:12px}
+.mon th,.mon td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.1);text-align:left;vertical-align:top}
+.mon .card{border:2px solid #ff8a00;border-radius:10px;padding:12px;margin-bottom:10px}
+.mon .card h3{margin:0 0 6px;color:#ff8a00}
+.mon input,.mon select{padding:6px;border-radius:6px;border:1px solid rgba(255,255,255,.25);background:transparent;color:inherit}
+.mon .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.mon .pill{padding:2px 8px;border-radius:99px;font-size:11px;background:rgba(255,255,255,.12)}
+.mon .pill.bad{background:#e5484d}.mon .pill.good{background:#30a46c}.mon .pill.warn{background:#ff8a00;color:#000}

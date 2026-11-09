@@ -1,0 +1,51 @@
+/* =====================================================================
+   Profile page (from original).
+   ===================================================================== */
+.profile-page{min-height:calc(100vh - 82px);box-sizing:border-box;background:#070c17;color:#eef2f8;padding:9px 16px 36px;overflow-x:hidden}
+.profile-page.active{display:block}
+.profile-wrap{width:100%;max-width:420px;margin:0 auto;box-sizing:border-box}
+.profile-hero-card,.profile-password-card{background:linear-gradient(145deg,#14213a,#0f1a2f);border:1px solid rgba(201,169,97,.68);box-shadow:0 16px 32px rgba(0,0,0,.20);box-sizing:border-box}
+.profile-hero-card{height:269px;border-radius:25px;padding:31px 18px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+.profile-sound-toggle{position:absolute;top:13px;right:14px;height:27px;min-width:68px;padding:0 9px;border:1px solid rgba(177,157,100,.68);border-radius:15px;background:#252b35;color:#dfc36e;display:inline-flex;align-items:center;justify-content:center;gap:5px;font:800 9px/1 var(--font-mono);letter-spacing:1px;cursor:pointer;box-sizing:border-box}
+.profile-sound-toggle.off{color:#8995aa;border-color:rgba(91,108,137,.6);background:#182133}
+.profile-avatar{width:83px;height:83px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#d9b95c,#bd963e);border:5px solid rgba(107,101,82,.72);box-shadow:0 0 25px rgba(201,169,97,.18);color:#070b12;font:700 34px/1 var(--font-sans);margin-bottom:17px}
+.profile-username{margin:0;color:#f2f4fa;font:800 22px/1 var(--font-sans);letter-spacing:.2px}
+.profile-pills{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:18px}
+.profile-pill{height:29px;padding:0 15px;border-radius:17px;border:1px solid rgba(177,157,100,.7);background:#252b35;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:#dfc36e;font:700 12px/1 var(--font-mono);letter-spacing:.4px;white-space:nowrap}
+.profile-since{height:30px;margin-top:9px;padding:0 16px;border-radius:17px;border:1px solid rgba(50,73,112,.7);background:rgba(10,20,39,.45);display:flex;align-items:center;justify-content:center;gap:8px;color:#9aa7bf;font:600 11px/1 var(--font-mono);letter-spacing:1px;white-space:nowrap}
+.profile-password-card{margin-top:17px;min-height:429px;border-radius:25px;padding:25px 23px 23px}
+.profile-password-heading{width:max-content;min-width:182px;height:34px;margin:0 auto 25px;padding:0 18px;border:1px solid rgba(177,157,100,.62);border-radius:18px;background:#2a303a;display:flex;align-items:center;justify-content:center;gap:9px;color:#e2c873;font:800 11px/1 var(--font-mono);letter-spacing:1.7px;white-space:nowrap}
+.profile-field-label{display:block;color:#929eb7;font:700 10px/1.2 var(--font-mono);letter-spacing:2px;margin:0 0 9px}
+.profile-password-input-wrap{position:relative;margin-bottom:20px}
+.profile-password-input-wrap input{width:100%;height:49px;box-sizing:border-box;border:1px solid rgba(52,73,110,.76);border-radius:16px;background:#101a2e;color:#e9edf5;outline:none;padding:0 49px 0 17px;font:500 16px/1 var(--font-sans)}
+.profile-password-input-wrap input:focus{border-color:rgba(210,178,77,.75);box-shadow:0 0 0 1px rgba(210,178,77,.12)}
+.profile-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:0;background:transparent;color:#8e9bb6;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}
+.profile-eye svg{width:22px;height:22px}
+.profile-change-btn{width:100%;height:52px;border:0;border-radius:16px;background:linear-gradient(180deg,#dfbd58,#cba444);color:#15130e;display:flex;align-items:center;justify-content:center;gap:10px;font:800 14px/1 var(--font-sans);cursor:pointer;box-shadow:0 11px 24px rgba(201,169,97,.16)}
+.profile-arrow{font-size:23px;line-height:1;margin-left:2px}
+.profile-password-message{min-height:16px;margin-top:8px;text-align:center;color:#9ba7bd;font:600 9px/1.35 var(--font-mono);letter-spacing:.4px}
+.profile-password-message.success{color:#25d27d}
+.profile-password-message.error{color:#ff7e7e}
+@media(min-width:701px){
+ .profile-page{padding:24px 28px 48px}
+ .profile-wrap{max-width:760px}
+ .profile-hero-card{min-height:490px;padding:58px 24px 34px}
+ .profile-avatar{width:150px;height:150px;font-size:62px}
+ .profile-username{font-size:38px}
+ .profile-pill{height:50px;font-size:17px;padding:0 25px}
+ .profile-password-card{padding:46px 48px 42px}
+ .profile-password-input-wrap input{height:78px;font-size:23px;padding-left:28px}
+ .profile-change-btn{height:76px;font-size:21px}
+}
+
+/* Profile: username row + the ONE username copy button.
+   Visual language taken from the My Order copy control (.history-copy): same border/background/text colours,
+   gold hover border + lift, green "copied" state, .18s transition. Compact pill with the same clipboard icon. */
+.profile-username-row{display:flex;align-items:center;justify-content:center;gap:9px;max-width:100%;min-width:0;margin:0}
+.profile-username-row .profile-username{min-width:0;flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-username-row .vip-copy-btn{-webkit-appearance:none;appearance:none;flex:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;height:28px;min-width:76px;margin:0;padding:0 11px 0 9px;border-radius:999px;border:1px solid rgba(67,84,118,.75);background:rgba(9,18,37,.38);color:#dbe1ed;font:800 10px/1 var(--font-mono,monospace);letter-spacing:.6px;text-transform:none;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.04);transition:.18s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.profile-username-row .vip-copy-ico{font-size:13px;line-height:1}
+.profile-username-row .vip-copy-btn:hover{border-color:#d7b947;color:#f1d778;transform:translateY(-1px);box-shadow:0 0 12px rgba(215,185,71,.16),inset 0 1px 0 rgba(255,255,255,.05)}
+.profile-username-row .vip-copy-btn:active{transform:scale(.95)}
+.profile-username-row .vip-copy-btn.copied{color:#21d17b;border-color:#21d17b;background:rgba(33,209,123,.08)}
+@media(min-width:701px){.profile-username-row{gap:14px}.profile-username-row .vip-copy-btn{height:34px;min-width:92px;font-size:12px;padding:0 14px 0 12px;gap:6px}.profile-username-row .vip-copy-ico{font-size:16px}}

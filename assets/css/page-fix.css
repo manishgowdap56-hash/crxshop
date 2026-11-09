@@ -1,0 +1,39 @@
+/* ================================================================
+   FINAL PAGE VISIBILITY / NAVIGATION FIX
+   The supplied reference stylesheet contains SPA-only display:none
+   rules. These standalone PHP pages must always render their own
+   active root section when loaded directly.
+   ================================================================ */
+html, body { min-height:100%; }
+body.auth-body { background-color:#070b14; }
+
+.dash-shell,
+.dash-content { visibility:visible !important; opacity:1 !important; }
+.dash-shell { min-height:100vh; width:100%; background:#070b14; }
+.dash-content { display:block !important; }
+
+.store-page.active,
+.balance-page.active,
+.deposit-page.active,
+.mykeys-page.active,
+.api-page.active,
+.referral-page.active,
+.profile-page.active,
+.api-docs-page.active {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+
+/* The checkout/payment layers are hidden until their own JS opens them. */
+.store-checkout:not(.open),
+.delivery-modal:not(.open) { visibility:hidden; }
+
+/* User drawer must sit above every page and never create a permanent black layer. */
+.dash-drawer { z-index:5000 !important; }
+.dash-drawer:not(.open) { pointer-events:none !important; }
+.dash-drawer.open { pointer-events:auto !important; }
+
+@media (max-width:700px) {
+  .dash-content { padding:20px 12px 42px !important; }
+}

@@ -1,0 +1,46 @@
+-- v61 (OPTIONAL). The application applies everything below automatically and idempotently (dual_ensure_schema).
+-- Run by hand only if the website's DB user has no ALTER/CREATE privilege. BACK UP FIRST. Safe to run more than once.
+-- Requires v59/v60 tables (price_change_events, provider_price_history) to exist: open the site once (or run migration_v59) first.
+-- Existing users become Normal Users through the column DEFAULT; NO statement here updates users.account_type, so a reseller promoted later is never reset.
+
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'account_type') = 0, 'ALTER TABLE users ADD COLUMN account_type VARCHAR(10) NOT NULL DEFAULT 'normal'', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'reseller_since') = 0, 'ALTER TABLE users ADD COLUMN reseller_since DATETIME DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'reseller_source') = 0, 'ALTER TABLE users ADD COLUMN reseller_source VARCHAR(12) DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'account_type_changed_by') = 0, 'ALTER TABLE users ADD COLUMN account_type_changed_by INT UNSIGNED DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'account_type_changed_at') = 0, 'ALTER TABLE users ADD COLUMN account_type_changed_at DATETIME DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_price') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_price DECIMAL(12,2) DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_custom_price_enabled') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_custom_price_enabled TINYINT(1) NOT NULL DEFAULT 0', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_custom_price') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_custom_price DECIMAL(12,2) DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_price_manual') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_price_manual TINYINT(1) NOT NULL DEFAULT 0', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_price_rate') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_price_rate DECIMAL(12,4) DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_inr_cost') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_inr_cost DECIMAL(12,2) DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_provider_price') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_provider_price DECIMAL(12,4) DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_pending_provider_price') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_pending_provider_price DECIMAL(12,4) DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_pending_calculated_inr') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_pending_calculated_inr DECIMAL(12,2) DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_increase_detected_at') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_increase_detected_at DATETIME DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_increase_deadline') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_increase_deadline DATETIME DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_price_change_source') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_price_change_source VARCHAR(20) DEFAULT NULL', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'product_plans' AND COLUMN_NAME = 'reseller_price_change_version') = 0, 'ALTER TABLE product_plans ADD COLUMN reseller_price_change_version INT UNSIGNED NOT NULL DEFAULT 0', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'price_change_events' AND COLUMN_NAME = 'price_category') = 0, 'ALTER TABLE price_change_events ADD COLUMN price_category VARCHAR(10) NOT NULL DEFAULT 'normal'', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+SET @s = IF((SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'provider_price_history' AND COLUMN_NAME = 'price_category') = 0, 'ALTER TABLE provider_price_history ADD COLUMN price_category VARCHAR(10) NOT NULL DEFAULT 'normal'', 'SELECT 1'); PREPARE q FROM @s; EXECUTE q; DEALLOCATE PREPARE q;
+
+CREATE TABLE IF NOT EXISTS reseller_memberships (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, user_id INT UNSIGNED NOT NULL, source VARCHAR(12) NOT NULL DEFAULT 'paid',
+  payment_ref VARCHAR(64) DEFAULT NULL, price_due DECIMAL(12,2) NOT NULL DEFAULT 0.00, price_paid DECIMAL(12,2) DEFAULT NULL,
+  gateway_txn_id VARCHAR(64) DEFAULT NULL, gateway_status VARCHAR(32) DEFAULT NULL, gateway_response TEXT,
+  payment_status VARCHAR(16) NOT NULL DEFAULT 'pending', expires_at DATETIME DEFAULT NULL, activated_at DATETIME DEFAULT NULL, revoked_at DATETIME DEFAULT NULL,
+  admin_id INT UNSIGNED DEFAULT NULL, note VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id), UNIQUE KEY uniq_rm_ref (payment_ref), UNIQUE KEY uniq_rm_txn (gateway_txn_id),
+  KEY idx_rm_user (user_id, payment_status), KEY idx_rm_status (payment_status, created_at),
+  CONSTRAINT fk_rm_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO settings (setting_key, setting_value) VALUES
+ ('reseller_membership_enabled','0'),('reseller_membership_price','0'),('reseller_membership_description',''),('reseller_membership_button','1');
+
+-- One-time seeding (only rows whose reseller_price is still NULL): Reseller columns start as a copy of the current values -> no price changes at migration time.
+UPDATE product_plans SET reseller_price = price, reseller_custom_price_enabled = custom_price_enabled, reseller_custom_price = custom_price, reseller_price_manual = price_manual,
+  reseller_price_rate = price_rate, reseller_inr_cost = inr_cost, reseller_provider_price = provider_price WHERE reseller_price IS NULL;
+-- Normal rate starts equal to the existing sync rate (INSERT IGNORE: an existing value is never replaced).
+INSERT IGNORE INTO settings (setting_key, setting_value) SELECT 'normal_usd_inr_rate', COALESCE(NULLIF((SELECT setting_value FROM settings WHERE setting_key='sync_usd_inr_rate'),''),'30');
+INSERT INTO settings (setting_key, setting_value) VALUES ('dual_seed_v61','1') ON DUPLICATE KEY UPDATE setting_value='1';

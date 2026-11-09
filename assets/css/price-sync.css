@@ -1,0 +1,60 @@
+/* v55 Price Sync page (v40 base) - reuses the existing admin look (po-config / ao-clear); only the tabs and cards are new. */
+.ps-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.ps-tab{border:1px solid rgba(201,169,97,.3);border-radius:10px;background:#0d172b;color:#aab4c8;font:800 10px var(--font-mono);letter-spacing:1px;padding:10px 12px;cursor:pointer}
+.ps-tab.active{color:#edf1f7;border-color:rgba(201,169,97,.8)}
+.ps-tab b{color:#ffd37a}
+.ps-card{border:1px solid rgba(201,169,97,.22);border-radius:12px;background:#0d172b;padding:12px;margin:0 0 10px}
+.ps-card h4{margin:0 0 8px;color:#edf1f7;font:800 12px var(--font-mono);word-break:break-word}
+.ps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.ps-grid label{display:flex;flex-direction:column;gap:4px;color:#7d8aa3;font:800 9px var(--font-mono);letter-spacing:1px}
+.ps-grid input,.ps-grid select,.ps-grid textarea{border:1px solid rgba(201,169,97,.3);border-radius:8px;background:#08111f;color:#edf1f7;font:700 11px var(--font-mono);padding:8px;box-sizing:border-box;max-width:100%}
+.ps-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ps-log{border-bottom:1px solid rgba(255,255,255,.07);padding:9px 2px;color:#aab4c8;font:700 11px/1.5 var(--font-mono);word-break:break-word}
+.ps-log b{color:#ffd37a}.ps-log pre{margin:4px 0 0;white-space:pre-wrap;color:#7f8ca5;font:600 10px var(--font-mono)}
+.ps-empty{color:#7f8ca5;font:700 11px var(--font-mono);padding:14px 2px}
+
+/* v49 sequential sync job panel */
+.ps-job{margin:10px 0}
+.ps-bar{height:8px;border-radius:6px;background:#08111f;border:1px solid rgba(201,169,97,.25);overflow:hidden;margin:6px 0}
+.ps-bar i{display:block;height:100%;background:#c9a961;transition:width .4s}
+.ps-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin-top:6px}
+.ps-tile{border:1px solid rgba(201,169,97,.18);border-radius:8px;background:#08111f;padding:8px}
+.ps-tile b{display:block;color:#ffd37a;font:800 15px var(--font-mono)}
+.ps-tile span{display:block;color:#7d8aa3;font:800 8px var(--font-mono);letter-spacing:1px;margin-top:2px}
+.ps-job-ok{border-color:rgba(80,200,120,.6)}.ps-job-bad{border-color:rgba(230,90,90,.7)}.ps-job-warn{border-color:rgba(255,211,122,.7)}
+.ps-probs{margin-top:8px}.ps-probs summary{cursor:pointer;color:#ffd37a;font:800 10px var(--font-mono);letter-spacing:1px;padding:6px 0}
+
+/* v51 status panel + tiles (reused by the v55 Price Sync page) */
+.ps2-status{border:1px solid rgba(201,169,97,.3);border-radius:14px;background:linear-gradient(180deg,#0f1b33,#0b1424);padding:14px;margin:0 0 14px}
+.ps2-status-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.ps2-status-head b{color:#edf1f7;font:800 13px var(--font-mono);letter-spacing:1px}
+.ps2-status-head small{color:#7f8ca5;font:600 10px var(--font-mono);display:block;margin-top:4px;max-width:70ch;word-break:break-word}
+.ps2-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:#7d8aa3;vertical-align:middle}
+.ps2-dot.ok{background:#3fd17f;box-shadow:0 0 8px #3fd17f}.ps2-dot.warn{background:#ffd37a}.ps2-dot.bad{background:#e65a5a}.ps2-dot.run{background:#5aa9ff;animation:ps2p 1s infinite alternate}
+@keyframes ps2p{to{opacity:.35}}
+.ps2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:12px;margin-bottom:6px}
+.ps2-card h4{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:1px}
+.ps2-letter{display:inline-flex;width:22px;height:22px;border-radius:50%;background:#c9a961;color:#08111f;align-items:center;justify-content:center;font:900 11px var(--font-mono)}
+.ps2-desc{color:#8e9ab2;font:600 11px/1.55 var(--font-mono);margin:0 0 10px}
+.ps-tile i{display:block;color:#6f7b93;font:700 8px/1.4 var(--font-mono);margin-top:3px;font-style:normal;word-break:break-word}
+.ps-tile b{word-break:break-word}
+.ps-tile.hot{border-color:rgba(255,211,122,.7)}.ps-tile.bad{border-color:rgba(230,90,90,.7)}.ps-tile.up b{color:#ff9d6b}.ps-tile.down b{color:#6be3a0}
+.ps2-settings{margin-top:12px}.ps2-settings summary{cursor:pointer;color:#ffd37a;font:800 10px var(--font-mono);letter-spacing:1px;padding:6px 0}
+.pr-up b:first-child{color:#ff9d6b}.pr-down b:first-child{color:#6be3a0}
+@media(max-width:560px){.ps-tiles{grid-template-columns:repeat(2,1fr)}.ps2-status-head{flex-direction:column;align-items:stretch}}
+/* v52: price-change cards + provider catalog cards reuse the All Orders card (.ao-card / .ao-list) */
+.pc-card .ao-prod{display:flex;align-items:center;gap:8px}
+.pc-img{width:34px;height:34px;border-radius:8px;object-fit:cover;flex:none;border:1px solid rgba(201,169,97,.35)}
+.pc-card .ao-kv{margin-top:10px}
+.pc-card.pr-Increased{border-color:rgba(255,122,122,.55)}
+.pc-card.pr-Decreased{border-color:rgba(33,209,123,.55)}
+.pc-card .ao-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.pc-card .ao-actions button{border:1px solid rgba(201,169,97,.5);border-radius:10px;background:#0d172b;color:#edf1f7;font:800 10px var(--font-mono);letter-spacing:1px;padding:9px 10px;cursor:pointer}
+.pc-card .ao-actions button:disabled{opacity:.5;cursor:not-allowed}
+
+/* v55: price history cards */
+.pc-card.pr-up,.pc-card.pr-Increased{border-color:rgba(255,122,122,.55)}
+.pc-card.pr-down,.pc-card.pr-Decreased{border-color:rgba(33,209,123,.55)}
+.ps-res-success{color:#3fd17f}.ps-res-already{color:#5aa9ff}.ps-res-failed{color:#ff7a7a}.ps-res-pending{color:#ffd37a}
+.ps-pager{display:flex;gap:8px;align-items:center;margin-top:10px}
+.ps-filter{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}

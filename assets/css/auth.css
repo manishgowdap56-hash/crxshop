@@ -1,0 +1,132 @@
+/* =====================================================================
+   Splash, Login, Register styles. Extracted unchanged from original.
+   ===================================================================== */
+
+.welcome-body{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:
+        radial-gradient(ellipse 800px 500px at 50% -10%, rgba(201,169,97,.16), transparent 60%),
+        radial-gradient(ellipse 700px 500px at 100% 110%, rgba(232,207,156,.10), transparent 60%),
+        var(--bg);
+    overflow:hidden;position:relative;
+}
+.welcome-grid{
+    position:absolute;inset:-10%;z-index:0;opacity:.3;
+    background-image:linear-gradient(rgba(201,169,97,.10) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(201,169,97,.10) 1px,transparent 1px);
+    background-size:44px 44px;animation:gridMove 24s linear infinite;
+}
+@keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(44px,44px)}}
+.welcome-wrap{position:relative;z-index:1;text-align:center;padding:32px;max-width:420px;margin:0 auto}
+@media (min-width:760px){ .welcome-wrap{max-width:600px} }
+.welcome-badge{
+    width:104px;height:104px;margin:0 auto 26px;border-radius:28px;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(155deg,#12261f,#050f0c 70%);
+    border:1px solid var(--border-soft);
+    box-shadow:0 0 0 1px rgba(201,169,97,.10),0 24px 60px -16px rgba(201,169,97,.4),0 0 50px -12px rgba(232,207,156,.3);
+    animation:badgeFloat 3.2s ease-in-out infinite;
+}
+@keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.welcome-badge img{width:100%;height:100%;object-fit:cover;border-radius:28px}
+.welcome-ring{
+    position:absolute;inset:-8px;border-radius:34px;border:1.5px solid transparent;
+    background:conic-gradient(from 0deg, var(--gold), var(--cyan), var(--gold)) border-box;
+    -webkit-mask:linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    animation:ringSpin 4s linear infinite;
+}
+@keyframes ringSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.welcome-eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);opacity:.9;margin-bottom:14px}
+.welcome-title{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:.4px;text-transform:uppercase;color:var(--text);line-height:1.35;margin:0 0 10px}
+.welcome-title span{background:linear-gradient(90deg,var(--gold),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.welcome-tagline{font-size:13.5px;color:var(--muted);font-weight:500;margin-bottom:30px}
+.welcome-loader{width:180px;height:4px;margin:0 auto;border-radius:99px;background:var(--border);overflow:hidden}
+.welcome-loader-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--cyan));animation:loadBar 2.9s ease-in-out forwards}
+@keyframes loadBar{0%{width:0%}100%{width:100%}}
+.welcome-note{margin-top:16px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);opacity:.75}
+
+.auth-body{
+    min-height:100vh;
+    background:
+        radial-gradient(ellipse 800px 500px at 50% -10%, rgba(201,169,97,.10), transparent 60%),
+        radial-gradient(ellipse 700px 500px at 100% 110%, rgba(232,207,156,.06), transparent 60%),
+        var(--bg);
+    overflow-x:hidden;color:var(--text);
+}
+.auth-page{
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:54px 16px 44px;box-sizing:border-box;
+}
+.auth-wrap{width:100%;max-width:420px;margin:0 auto;text-align:center}
+@media (min-width:760px){ .auth-wrap{max-width:600px} }
+.auth-badge{
+    width:96px;height:96px;margin:0 auto 26px;border-radius:26px;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(155deg,#12261f,#050f0c 70%);
+    border:1px solid var(--border-soft);
+    box-shadow:0 0 0 1px rgba(201,169,97,.10),0 24px 60px -16px rgba(201,169,97,.4),0 0 50px -12px rgba(232,207,156,.3);
+}
+.auth-badge img{width:100%;height:100%;object-fit:cover;border-radius:26px}
+.auth-ring{
+    position:absolute;inset:-8px;border-radius:32px;border:1.5px solid transparent;
+    background:conic-gradient(from 0deg,var(--gold),var(--cyan),var(--gold)) border-box;
+    -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    animation:ringSpin 4s linear infinite;
+}
+.auth-brand{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:.4px;text-transform:uppercase;line-height:1.35;margin:0 0 10px;color:var(--text)}
+.auth-brand span{background:linear-gradient(90deg,var(--gold),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.auth-subtitle{font-size:13.5px;color:var(--muted);font-weight:500;margin:0 0 30px}
+.auth-card{
+    width:100%;max-width:354px;margin-left:auto;margin-right:auto;box-sizing:border-box;
+    background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,0)),#101b31;
+    border:1.5px solid rgba(201,169,97,.50);border-radius:22px;padding:22px 18px 18px;
+    box-shadow:0 16px 40px -20px rgba(15,23,32,.18),0 0 0 1px rgba(201,169,97,.05);
+}
+.auth-card-title{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    min-height:34px;padding:6px 18px;margin:0 auto 32px;border-radius:999px;
+    background:rgba(255,255,255,.08);border:1.5px solid rgba(201,169,97,.36);
+    color:#ead7ae;font-family:var(--font-mono);font-size:14px;font-weight:700;
+    letter-spacing:2px;text-transform:uppercase;
+}
+.auth-field{text-align:left;margin:0 0 16px}
+.auth-field label{display:block;margin:0 0 10px;color:#929db5;font-family:var(--font-mono);font-size:11.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.auth-input-wrap{position:relative}
+.auth-input{
+    width:100%;height:50px;box-sizing:border-box;padding:0 14px;border-radius:14px;
+    border:1px solid #283957;outline:none;background:#10192d;color:var(--text);
+    font-family:var(--font-body);font-size:15px;font-weight:500;
+}
+.auth-input::placeholder{color:#707b94;opacity:1}
+.auth-input:focus{border-color:rgba(201,169,97,.65);box-shadow:0 0 0 3px rgba(201,169,97,.10)}
+.auth-input.password{padding-right:52px}
+.password-toggle{
+    position:absolute;right:14px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;padding:0;border:0;background:transparent;
+    color:#8b96ae;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.password-toggle svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2}
+.auth-submit{
+    width:100%;height:54px;border:0;border-radius:16px;margin-top:16px;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    background:linear-gradient(135deg,#d7b25e,#c39b3c);color:#171208;
+    font-family:var(--font-body);font-size:15px;font-weight:700;cursor:pointer;
+    box-shadow:0 10px 28px -12px rgba(201,169,97,.65);
+}
+.auth-submit:active{transform:scale(.99)}
+.auth-switch{margin:16px 0 0;color:#929db5;font-size:13.5px;font-weight:500}
+.auth-switch a,.auth-switch button{
+    padding:0;border:0;background:transparent;color:#d4b05c;font:inherit;font-weight:700;cursor:pointer;
+    text-decoration:none;
+}
+.auth-form-message{min-height:16px;margin-top:10px;text-align:center;color:#8e9bb6;font-size:12px;font-weight:600}
+.auth-form-message.error{color:#ff7a84}
+.register-card .auth-card-title{margin-bottom:24px}
+.register-card .auth-field{margin-bottom:13px}
+.register-card .auth-submit{margin-top:12px}
+.auth-screen{display:none;width:100%}
+.auth-screen.active{display:block}
+.auth-loading-hidden{display:none !important}
+@media (max-width:380px){ .auth-page{padding-left:14px;padding-right:14px} .auth-card{padding-left:20px;padding-right:20px} }

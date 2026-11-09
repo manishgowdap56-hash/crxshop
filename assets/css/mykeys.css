@@ -1,0 +1,63 @@
+/* =====================================================================
+   My Keys page (from original).
+   ===================================================================== */
+.mykeys-page{min-height:calc(100vh - 96px);box-sizing:border-box;background:transparent}
+.mykeys-page.active{display:block}
+.mykeys-wrap{width:100%;max-width:760px;margin:0 auto;padding:28px 32px 48px;box-sizing:border-box}
+.history-date{height:78px;border:1px solid rgba(67,89,133,.58);border-radius:22px;background:rgba(18,28,51,.92);display:flex;align-items:center;gap:18px;padding:0 22px;position:relative;box-shadow:0 12px 30px rgba(0,0,0,.16)}
+.history-date-icon{font-size:27px;line-height:1;flex:0 0 auto}
+.history-date input{appearance:none;-webkit-appearance:none;border:0;outline:0;background:transparent;color:#f0f2f7;font:600 23px 'JetBrains Mono',monospace;letter-spacing:.4px;width:100%;min-width:0;cursor:pointer}
+.history-date-arrow{font-size:28px;color:#d9dce6;line-height:1;transform:translateY(-3px);pointer-events:none}
+.history-stats{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:34px}
+.history-stat{min-height:194px;border:2px solid rgba(171,151,95,.72);border-radius:34px;background:linear-gradient(145deg,rgba(21,31,55,.98),rgba(15,25,46,.98));padding:30px 30px 24px;box-sizing:border-box}
+.history-stat.api{border-color:rgba(174,153,100,.75)}
+.history-stat.site{border-color:rgba(0,157,102,.78)}
+.history-stat-icon{font-size:44px;line-height:1;margin-bottom:18px}
+.history-stat-label{font:600 18px 'Chakra Petch',sans-serif;letter-spacing:2.2px;color:#99a3bb;text-transform:uppercase}
+.history-stat-value{font:700 42px 'JetBrains Mono',monospace;color:#f1d36a;margin-top:14px}
+.history-stat.site .history-stat-value{color:#22c978}
+.history-list-head{display:flex;align-items:center;justify-content:space-between;margin:34px 6px 14px;color:#9ca7be;font:600 12px 'Chakra Petch',sans-serif;letter-spacing:2px}
+.history-list-head span:last-child{color:#d9bd52}
+.mykeys-list{display:flex;flex-direction:column;gap:18px}
+.key-history-card{border:2px solid rgba(171,151,95,.72);border-radius:27px;background:linear-gradient(145deg,rgba(20,30,53,.99),rgba(16,25,45,.99));padding:25px 26px 24px;box-sizing:border-box;box-shadow:0 12px 30px rgba(0,0,0,.14)}
+.key-history-title{font:700 23px 'Inter',sans-serif;color:#f0f2f7;display:flex;align-items:center;gap:10px;line-height:1.25}
+.key-history-title .movie{font-size:20px}
+.key-history-key{margin-top:17px;font:700 18px 'JetBrains Mono',monospace;letter-spacing:1.3px;color:#d5b95c;word-break:break-all}
+.key-history-meta{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:20px}
+.history-pill{height:38px;padding:0 17px;border-radius:22px;border:1px solid rgba(66,84,119,.6);display:inline-flex;align-items:center;justify-content:center;color:#9ca7bd;background:rgba(9,18,37,.32);font:500 15px 'Inter',sans-serif;white-space:nowrap}
+.history-pill.source{border-color:rgba(89,92,198,.95);color:#8f91ff}
+.history-pill.source.site{border-color:rgba(59,78,108,.8);color:#98a4bb}
+.history-copy{margin-left:auto;width:48px;height:48px;border-radius:50%;border:1px solid rgba(67,84,118,.75);background:rgba(9,18,37,.38);color:#dbe1ed;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer}
+.history-copy.copied{color:#21d17b;border-color:#21d17b}
+.key-history-purchased{margin-top:18px;color:#9da7bd;font:500 15px 'Inter',sans-serif}
+.mykeys-empty{margin-top:20px;border:1px dashed rgba(102,119,151,.6);border-radius:24px;background:rgba(16,26,47,.7);min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:9px;color:#9ba6bb}
+.mykeys-empty-icon{font-size:38px;margin-bottom:4px}
+.mykeys-empty strong{font:700 17px 'Chakra Petch',sans-serif;letter-spacing:2px;color:#d5d9e3}
+.mykeys-empty[hidden]{display:none}
+/* v58: FAILED order card (OUT OF STOCK directly under FAILED) */
+.key-history-card.failed{border-color:rgba(255,122,122,.55)}
+.history-failed{margin-top:16px;display:flex;flex-direction:column;gap:4px}
+.history-failed-status{font:800 20px 'Chakra Petch',sans-serif;letter-spacing:2px;color:#ff7a7a}
+.history-failed-reason{font:700 15px 'Chakra Petch',sans-serif;letter-spacing:1.5px;color:#ffb347}
+.history-pill.refund{border-color:rgba(33,209,123,.6);color:#21d17b}
+@media(max-width:700px){
+ .history-failed-status{font-size:16px}
+ .history-failed-reason{font-size:12px}
+}
+@media(max-width:700px){
+ .mykeys-wrap{max-width:420px;padding:22px 16px 36px}
+ .history-date{height:46px;border-radius:16px;padding:0 14px;gap:10px}
+ .history-date input{font-size:16px}
+ .history-date-icon{font-size:19px}
+ .history-date-arrow{font-size:22px}
+ .history-stats{gap:12px;margin-top:18px}
+ .history-stat{min-height:110px;padding:14px 14px 12px;border-radius:20px}
+ .history-stat-icon{font-size:25px;margin-bottom:8px}
+ .history-stat-label{font-size:10px;letter-spacing:1.25px}
+ .history-stat-value{font-size:23px;margin-top:6px}
+ .key-history-card{padding:15px 14px 14px;border-radius:17px}
+ .key-history-title{font-size:16px}
+ .key-history-key{font-size:13px}
+ .history-pill{height:28px;padding:0 10px;font-size:11px}
+ .history-copy{width:34px;height:34px;font-size:17px}
+}

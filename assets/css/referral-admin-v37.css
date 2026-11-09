@@ -1,0 +1,16 @@
+/* v37 admin: Referral Commission page. Additive only; reuses the existing admin.css / ops-v36.css classes, colors and fonts. */
+.rc-cards{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.rc-cards .ao-stat b{font-size:17px;word-break:break-word}
+.rc-cards .ao-stat small{display:block;margin-top:3px;color:#7f8ca5;font:700 9px/1.35 var(--font-mono)}
+.ao-search-grid.rc-one{grid-template-columns:1fr}
+.rc-filters input[type="date"],.rc-filters input[type="text"],.rc-filters input[type="number"]{height:38px;border:1px solid rgba(201,169,97,.3);border-radius:10px;background:#0d172b;color:#edf1f7;font:800 10px var(--font-mono);padding:0 8px;max-width:100%;box-sizing:border-box;min-width:0}
+.rc-filters input[type="text"],.rc-filters input[type="number"]{width:140px}
+.po-config label span{color:#8e9ab3;font-weight:700;letter-spacing:0}
+#rcActive{font-weight:900;color:#d8b45a}
+#rcScope{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#rcScope[hidden],#rcCustomWrap[hidden]{display:none}
+@media (max-width:760px){
+  .rc-filters input[type="date"],.rc-filters input[type="text"],.rc-filters input[type="number"]{flex:1 1 140px;width:auto}
+  .rc-filters .ao-clear{flex:1 1 90px}
+  .rc-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

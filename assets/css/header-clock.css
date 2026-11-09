@@ -1,0 +1,9 @@
+/* v36 user-header clock. Lives INSIDE .dash-brand (under the username), so it never changes the header height
+   (.dash-header has a fixed height) and cannot overlap the balance pill or the menu button (they are separate flex items).
+   Same font family / colour as the existing .dash-user line. */
+.dash-clock{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px;margin-top:3px;max-width:100%;overflow:hidden;
+  color:#8d9ab3;font-family:var(--font-mono);font-size:11px;line-height:1.25;letter-spacing:.6px;white-space:nowrap}
+.dash-clock-time{color:#d6b25f;font-weight:700;font-variant-numeric:tabular-nums}
+.dash-clock-date{font-variant-numeric:tabular-nums}
+@media (max-width:760px){.dash-clock{font-size:10px;letter-spacing:.3px;margin-top:2px}}
+@media (max-width:420px){.dash-clock{font-size:9px;letter-spacing:.1px;gap:0 6px}}

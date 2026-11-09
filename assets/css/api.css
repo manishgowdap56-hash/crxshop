@@ -1,0 +1,44 @@
+/* =====================================================================
+   API page (from original).
+   ===================================================================== */
+.api-page{background:#070b14;color:#eef2f8;padding:14px 16px 42px;box-sizing:border-box;overflow:auto}
+.api-page.active{display:block}
+.api-wrap{width:min(100%,760px);margin:0 auto}
+.api-wallet{height:44px;border:1px solid rgba(201,169,97,.35);border-radius:10px;background:rgba(36,32,27,.9);display:flex;align-items:center;padding:0 14px;color:#dcb955;font:700 12px var(--font-mono);margin:0 0 12px}
+.api-card{background:#111b31;border:1px solid rgba(148,162,194,.32);border-radius:13px;padding:15px 13px 13px;margin-bottom:12px;box-shadow:0 14px 34px rgba(0,0,0,.18)}
+.api-kicker{font:700 8px var(--font-mono);letter-spacing:2.2px;color:#d9b84f;margin-bottom:12px}
+.api-title{font:700 15px var(--font-mono);letter-spacing:2px;color:#e0c15c;margin:0 0 11px}
+.api-key-label{font:700 9px var(--font-mono);letter-spacing:1.5px;color:#9aa6bf;margin-bottom:6px}
+.api-key-row{display:flex;align-items:center;gap:10px;background:#0a0719;border:1px solid rgba(74,54,104,.6);border-radius:8px;padding:8px 10px 8px 12px;min-height:38px}
+.api-key-value{flex:1;min-width:0;color:#ead7ff;font:700 13px/1.25 var(--font-mono);letter-spacing:.35px;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
+.api-key-value::-webkit-scrollbar{display:none}
+.api-copy{flex:0 0 auto;border:1px solid rgba(120,110,170,.45);background:#15102a;color:#d8dce7;border-radius:7px;padding:6px 9px;font:800 9px var(--font-mono);cursor:pointer}
+.api-warning{font-size:9px;line-height:1.45;color:#b9b3a3;margin:8px 1px 10px}
+.api-action{width:100%;height:37px;border:1px solid rgba(105,128,164,.28);border-radius:7px;background:#10192d;color:#edf1f7;font:700 10px var(--font-mono);cursor:pointer}
+.api-doc-btn{width:100%;height:39px;border:0;border-radius:8px;background:linear-gradient(180deg,#e0bd50,#cba63d);color:#17130b;font:800 10px var(--font-mono);cursor:pointer}
+.api-variants-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.api-variants-title{font:700 9px var(--font-mono);letter-spacing:1.8px;color:#e0c15c}
+.api-count{font:700 8px var(--font-mono);color:#9aa6bf;background:#1a2030;border:1px solid rgba(122,136,166,.25);border-radius:10px;padding:4px 8px}
+.api-product{background:#100820;border:1px solid rgba(104,77,142,.46);border-radius:8px;margin:0 0 7px;overflow:hidden}
+.api-product-head{width:100%;border:0;background:transparent;color:#f0edf5;display:flex;align-items:center;justify-content:space-between;padding:9px 10px;text-align:left;cursor:pointer}
+.api-product-name{font:700 9px var(--font-mono);letter-spacing:.6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.api-product-meta{font:500 8px var(--font-mono);color:#8d8ba2;margin-top:3px}
+.api-product-meta b{color:#39d78a}
+.api-chevron{color:#d8b653;font-size:11px;transition:transform .2s ease}
+.api-product.open .api-chevron{transform:rotate(90deg)}
+.api-duration-list{display:none;padding:0 8px 8px}
+.api-product.open .api-duration-list{display:block}
+.api-duration{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:7px;background:#170d24;border:1px solid rgba(89,62,124,.45);border-radius:6px;padding:7px 8px;margin-top:5px}
+.api-variant-id{color:#c7a6e0;font:700 8px var(--font-mono);background:#221232;border-radius:4px;padding:4px 5px;text-align:center}
+.api-duration-info{min-width:0;font:600 8px var(--font-mono);color:#bcb9c8}
+.api-duration-info strong{display:block;color:#e7e4ee;font-size:9px;margin-bottom:2px}
+.api-duration-info span{color:#8d8aa0}
+.api-duration-copy{border:0;background:transparent;color:#8e91a8;font:700 7px var(--font-mono);cursor:pointer}
+.api-empty{padding:20px 10px;text-align:center;color:#7f899d;font:600 9px/1.6 var(--font-mono);border:1px dashed rgba(122,136,166,.28);border-radius:8px}
+@media(max-width:700px){
+ .api-page{padding:10px 10px 32px}
+ .api-wallet{height:42px;margin-bottom:10px}
+ .api-card{padding:13px 11px}
+ .api-title{font-size:13px}
+ .api-key-value{font-size:9px}
+}

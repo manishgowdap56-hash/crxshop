@@ -1,0 +1,142 @@
+/* FINAL ADMIN MULTI-PAGE ROUTER FIX
+   Keep the admin shell/header mounted while switching between admin sections.
+   Previously all sections lived inside #adminScreen, so hiding #adminScreen
+   also hid Users, Products, Orders, Deposits and Settings. */
+html, body { min-height:100%; background:#070f1f; }
+
+#adminScreen {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  min-height:100vh;
+}
+
+#adminScreen > .admin-shell {
+  display:block;
+  width:100%;
+}
+
+#adminScreen.admin-page-dashboard > .admin-shell .admin-content {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+
+#adminScreen:not(.admin-page-dashboard) > .admin-shell .admin-content {
+  display:none !important;
+}
+
+#adminScreen > section[id^="admin"] {
+  position:relative;
+  z-index:1;
+  width:100%;
+  box-sizing:border-box;
+}
+
+#adminScreen > section[id^="admin"].active {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+
+#adminScreen > section[id^="admin"]:not(.active) {
+  display:none !important;
+}
+
+/* Never let the old SPA visibility rules create a black/empty admin page. */
+.admin-users-page.active,
+.admin-products-page.active,
+.admin-orders-page.active,
+.admin-api-settings-page.active,
+.admin-join-settings-page.active {
+  visibility:visible !important;
+  opacity:1 !important;
+}
+
+@media (max-width:700px) {
+  #adminScreen > section[id^="admin"] { min-height:calc(100vh - 70px); }
+}
+
+/* All admin pages are direct children of #adminScreen. Keep one page visible at a time. */
+#adminScreen > .admin-users-page.active,
+#adminScreen > .admin-products-page.active,
+#adminScreen > .admin-orders-page.active,
+#adminScreen > .admin-api-settings-page.active,
+#adminScreen > .admin-join-settings-page.active {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:relative;
+  z-index:2;
+}
+#adminScreen > .admin-users-page:not(.active),
+#adminScreen > .admin-products-page:not(.active),
+#adminScreen > .admin-orders-page:not(.active),
+#adminScreen > .admin-api-settings-page:not(.active),
+#adminScreen > .admin-join-settings-page:not(.active) {
+  display:none !important;
+}
+
+/* Reference-style isolated admin pages: switching a menu item must never leave
+   the dashboard flowing underneath the selected page. */
+#adminScreen { overflow-x:hidden; }
+#adminScreen > .admin-orders-page.active,
+#adminScreen > #adminDepositsPage.active {
+  display:block !important; visibility:visible !important; opacity:1 !important;
+  position:relative; z-index:2;
+}
+#adminScreen > .admin-orders-page:not(.active),
+#adminScreen > #adminDepositsPage:not(.active) { display:none !important; }
+@media (min-width:801px) {
+  /* Long product-builder forms get their own scroll area instead of pushing
+     another admin page underneath the dashboard. */
+  #adminProductsPage .admin-product-editor { max-height:calc(100vh - 150px); overflow-y:auto; overscroll-behavior:contain; }
+}
+
+/* True isolated admin pages: the dashboard is a sibling page, not a child
+   that can remain in normal document flow beneath another selected page. */
+#adminScreen > .admin-shell { min-height:0 !important; background:transparent; }
+#adminScreen > .admin-dashboard-page,
+#adminScreen > .admin-users-page,
+#adminScreen > .admin-products-page,
+#adminScreen > .admin-orders-page,
+#adminScreen > .admin-api-settings-page,
+#adminScreen > .admin-join-settings-page {
+  display:none !important;
+  width:100%;
+  box-sizing:border-box;
+}
+#adminScreen > .admin-dashboard-page.active,
+#adminScreen > .admin-users-page.active,
+#adminScreen > .admin-products-page.active,
+#adminScreen > .admin-orders-page.active,
+#adminScreen > .admin-api-settings-page.active,
+#adminScreen > .admin-join-settings-page.active {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:relative;
+  z-index:2;
+}
+
+/* Per-duration local-stock inventory input: reference-style, compact and clear. */
+#adminDurationBuilder .dur-local-wrap { margin-top: 8px; }
+#adminDurationBuilder .dur-local-wrap textarea.dur-keys {
+    width: 100%;
+    min-height: 120px;
+    box-sizing: border-box;
+    resize: vertical;
+    border: 1px solid #263955;
+    border-radius: 11px;
+    background: #0a1426;
+    color: #e9edf4;
+    padding: 11px 12px;
+    font: 600 12px var(--font-body);
+    line-height: 1.5;
+    outline: none;
+}
+#adminDurationBuilder .dur-local-wrap textarea.dur-keys:focus {
+    border-color: rgba(216,183,101,.72);
+    box-shadow: 0 0 0 3px rgba(216,183,101,.08);
+}
+#adminDurationBuilder .admin-key-count { margin-top: 6px; color: #6f7d94; font-size: 8px; }

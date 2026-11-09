@@ -1,0 +1,98 @@
+/* =====================================================================
+   Deposit + Payment QR (from original).
+   ===================================================================== */
+.balance-page{
+    min-height:calc(100vh - 82px);padding:18px 12px 42px;
+    background:#080d18;
+    background-image:linear-gradient(rgba(201,169,97,.055) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(201,169,97,.055) 1px,transparent 1px);
+    background-size:22px 22px;box-sizing:border-box;overflow-x:hidden;
+}
+.balance-page.active{display:block}
+.deposit-wrap{width:100%;max-width:420px;margin:0 auto}
+.deposit-wallet-card{height:42px;display:flex;align-items:center;gap:7px;padding:0 13px;margin:0 0 10px;border:1px solid rgba(201,169,97,.28);border-radius:9px;background:linear-gradient(180deg,#252a31,#292a2c);color:#d9b84f;font:700 9px var(--font-mono);letter-spacing:.2px}
+.deposit-wallet-icon{font-size:14px}
+.deposit-wallet-card strong{color:#d9b84f;font-weight:800}
+.deposit-add-card,.deposit-history-card{border:1px solid rgba(105,129,165,.52);border-radius:11px;background:linear-gradient(180deg,#101a2e,#0e182a);box-shadow:0 9px 24px rgba(0,0,0,.18)}
+.deposit-add-card{padding:13px 11px 12px;margin-bottom:9px}
+.deposit-card-kicker{color:#d8b765;font:800 8px var(--font-mono);letter-spacing:1.3px}
+.deposit-add-card label{display:block;color:#8995ad;font:700 7px var(--font-mono);letter-spacing:1px;margin:11px 0 5px}
+.deposit-input-wrap{height:38px;border:1px solid #1d2d49;border-radius:8px;background:#0c1628;display:flex;align-items:center}
+.deposit-input-wrap:focus-within{border-color:rgba(201,169,97,.72);box-shadow:0 0 0 2px rgba(201,169,97,.08)}
+.deposit-input-wrap input{width:100%;height:100%;border:0;outline:0;background:transparent;color:#dfe4ee;padding:0 12px;font:600 11px var(--font-mono);-webkit-appearance:none}
+.deposit-input-wrap input::-webkit-outer-spin-button,.deposit-input-wrap input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.deposit-hint{margin:5px 0 8px;color:#77839a;text-align:center;font:500 6.8px/1.35 var(--font-mono)}
+.deposit-pay-btn{width:100%;height:37px;border:0;border-radius:7px;background:linear-gradient(180deg,#d9b65a,#caa342);color:#161208;font:800 9px var(--font-mono);cursor:pointer;box-shadow:0 7px 18px rgba(201,169,97,.15)}
+.deposit-form-message{min-height:12px;margin-top:5px;text-align:center;color:#f07070;font:700 7px var(--font-mono)}
+.deposit-history-card{padding:11px 10px 10px}
+.deposit-history-card p{margin:4px 0 0;color:#6f7d94;font:500 6.7px/1.35 var(--font-mono)}
+.deposit-history-list{display:flex;flex-direction:column;gap:6px;margin-top:9px}
+.deposit-history-item{border:1px solid #263954;border-radius:7px;background:#101a2d;padding:8px 8px 7px;position:relative}
+.deposit-history-item.success{border-left:2px solid #19c76a}
+.deposit-history-item.failed,.deposit-history-item.rejected,.deposit-history-item.expired{border-left:2px solid #ed4c5c}
+.deposit-history-item.pending{border-left:2px solid #d8b765}
+.deposit-history-row{display:flex;align-items:center;justify-content:space-between;gap:7px}
+.deposit-history-amount{color:#e4c15c;font:800 9px var(--font-mono)}
+.deposit-history-status{font:800 6.5px var(--font-mono);padding:3px 7px;border-radius:999px;border:1px solid}
+.deposit-history-status.success,.deposit-history-status.approved{color:#20d478;border-color:rgba(32,212,120,.45);background:rgba(32,212,120,.08)}
+.deposit-history-status.failed,.deposit-history-status.rejected,.deposit-history-status.expired{color:#f25c68;border-color:rgba(242,92,104,.45);background:rgba(242,92,104,.08)}
+.deposit-history-status.pending{color:#e4c15c;border-color:rgba(228,193,92,.4);background:rgba(228,193,92,.08)}
+.deposit-history-meta{margin-top:4px;color:#6f7d94;font:500 6.2px/1.35 var(--font-mono)}
+.deposit-history-empty{padding:12px 4px 5px;text-align:center;color:#66738a;font:600 7px var(--font-mono)}
+
+/* --- Payment QR view --------------------------------------------- */
+.deposit-payment-view{width:100%;min-height:calc(100vh - 105px);padding:7px 0 20px}
+.payment-topline{display:flex;align-items:center;justify-content:space-between;padding:0 6px 7px;color:#e5e8ef;font:800 7px var(--font-mono);letter-spacing:.7px}
+.payment-secure{color:#4de38c;border:1px solid rgba(77,227,140,.35);border-radius:999px;padding:3px 7px;font-size:6px}
+.payment-card{border:1px solid rgba(120,104,198,.38);border-radius:12px;background:linear-gradient(145deg,#19163c 0%,#121633 54%,#0d1429 100%);padding:14px 10px 11px;box-shadow:0 12px 32px rgba(0,0,0,.3);position:relative;overflow:hidden}
+.payment-card:after{content:"";position:absolute;right:-80px;top:-55px;width:180px;height:180px;background:linear-gradient(135deg,transparent 45%,rgba(102,78,199,.18) 46%,transparent 72%);transform:rotate(8deg);pointer-events:none}
+.payment-kicker{text-align:center;color:#8d98b2;font:700 6.5px var(--font-mono);letter-spacing:1.5px}
+.payment-amount{text-align:center;color:#b99cf5;font:900 22px var(--font-mono);margin:3px 0 10px}
+.payment-order-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;padding:0 7px;color:#7e89a2;font:600 6px var(--font-mono);position:relative;z-index:1}
+.payment-order-grid strong{text-align:right;color:#d6dbe7;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.payment-qr-frame{width:142px;height:142px;margin:13px auto 8px;padding:9px;border:3px solid #e6cf82;border-radius:11px;background:#fff;box-shadow:0 0 0 2px rgba(203,159,255,.28),0 8px 22px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
+.payment-qr-frame svg{width:100%;height:100%;display:block}
+.payment-download{display:block;width:142px;height:25px;margin:0 auto 8px;border:1px solid #263554;border-radius:7px;background:#0d172b;color:#d7dce6;font:700 6.5px var(--font-mono);cursor:pointer}
+.payment-expiry{text-align:center;color:#8a96ad;font:600 6.5px var(--font-mono);margin:3px 0 7px}
+.payment-expiry span{color:#8a96ad}
+.payment-expiry strong{color:#d5dbe6}
+.payment-status{width:150px;min-height:25px;margin:0 auto 8px;border:1px solid #29385a;border-radius:8px;background:#0d1629;display:flex;align-items:center;justify-content:center;gap:6px;color:#d7dce5;font:700 6.5px var(--font-mono);position:relative;z-index:1}
+.payment-status .status-dot{width:7px;height:7px;border-radius:50%;border:1px solid currentColor;display:inline-block}
+.payment-status.waiting{color:#b8c1d0}
+.payment-status.processing{color:#d5b95c}
+.payment-status.processing .status-dot{border:2px solid rgba(213,185,92,.25);border-top-color:#d5b95c;animation:depositSpin .8s linear infinite}
+.payment-status.success{color:#3ee18a;border-color:rgba(62,225,138,.38);background:rgba(25,113,72,.1)}
+.payment-status.success .status-dot{background:#3ee18a;box-shadow:0 0 9px rgba(62,225,138,.55)}
+.payment-status.failed{color:#f35d6a;border-color:rgba(243,93,106,.38)}
+.payment-footnotes{display:flex;justify-content:center;gap:13px;color:#9ca5b7;font:500 5.5px var(--font-mono);position:relative;z-index:1}
+.payment-cancel{width:100%;height:29px;margin-top:7px;border:1px solid #263554;border-radius:7px;background:#111a2e;color:#d8dce5;font:700 7px var(--font-mono);cursor:pointer}
+@keyframes depositSpin{to{transform:rotate(360deg)}}
+@media(max-width:520px){.balance-page{padding:15px 11px 34px}.deposit-wrap{max-width:420px}.payment-qr-frame{width:142px;height:142px}}
+
+/* --- Verified-payment result capsules (same visual language as the maintenance card) --- */
+.pay-result-card{position:relative;box-sizing:border-box;width:100%;margin-top:14px;padding:32px 22px 26px;text-align:center;border:1px solid rgba(216,183,101,.34);border-radius:24px;background:linear-gradient(180deg,rgba(15,25,43,.94),rgba(7,14,26,.97));box-shadow:0 24px 80px rgba(0,0,0,.46);animation:payResultIn .35s ease both}
+.pay-result-card[hidden]{display:none}
+.pay-result-card.success{border-color:rgba(62,225,138,.4)}
+.pay-result-ring-wrap{position:relative;width:92px;height:92px;margin:0 auto 22px;display:flex;align-items:center;justify-content:center}
+.pay-result-ring{position:absolute;inset:-4px;border:2px solid transparent;border-top-color:#e0bd35;border-right-color:rgba(224,189,53,.7);border-bottom-color:rgba(224,189,53,.2);border-radius:50%;animation:depositSpin 1.4s linear infinite}
+.pay-result-core{position:relative;width:70px;height:70px;border-radius:50%;display:grid;place-items:center;border:2px solid rgba(224,189,53,.6);background:#0b1425;color:#e0bd35;font:900 28px Arial}
+.pay-result-check{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(88,215,155,.4);background:radial-gradient(circle at 35% 30%,#28563f,#10291f 70%);box-shadow:0 0 0 8px rgba(88,215,155,.04),0 0 36px rgba(88,215,155,.18)}
+.pay-result-check span{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;border:2px solid #58d79b;color:#69e1aa;font:900 30px Arial;animation:paySuccessPop .55s cubic-bezier(.2,.9,.2,1) both}
+.pay-result-kicker{margin:0 0 9px;color:#d8b765;font:900 8px var(--font-mono);letter-spacing:2.3px}
+.pay-result-kicker.success{color:#58d79b}
+.pay-result-title{margin:0;color:#eef1f6;font:900 15px var(--font-mono);letter-spacing:1.6px}
+.pay-result-title.success{color:#72e2ae}
+.pay-result-amount{margin:10px 0 2px;color:#f0eee8;font:900 26px var(--font-mono)}
+.pay-result-text{margin:10px auto 16px;max-width:300px;color:#8d99ae;font:600 8.5px/1.65 var(--font-mono);letter-spacing:.4px}
+.pay-result-progress{width:190px;height:4px;margin:0 auto 14px;border-radius:99px;background:#202c43;overflow:hidden}
+.pay-result-progress span{display:block;width:45%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#d9b43a,#f5db78);animation:payBar 1.35s ease-in-out infinite}
+.pay-result-balance{margin:0 auto 14px;color:#8995ad;font:700 8px var(--font-mono);letter-spacing:1px}
+.pay-result-balance strong{color:#e4c15c;font-weight:900;margin-left:5px}
+.pay-result-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid rgba(224,189,53,.3);border-radius:999px;background:rgba(224,189,53,.055);color:#dfc05b;font:900 7.5px var(--font-mono);letter-spacing:1.3px}
+.pay-result-pill i{width:6px;height:6px;border-radius:50%;background:#e0bd35;box-shadow:0 0 9px rgba(224,189,53,.9);animation:payBlink 1.2s ease-in-out infinite}
+.pay-result-pill.success{color:#62dba4;border-color:rgba(88,215,155,.28);background:rgba(88,215,155,.08)}
+.pay-result-pill.success i{background:#58d79b;box-shadow:0 0 9px rgba(88,215,155,.8);animation:none}
+@keyframes payResultIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes paySuccessPop{0%{transform:scale(.45);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes payBar{0%{transform:translateX(-120%);width:35%}50%{width:55%}100%{transform:translateX(430%);width:35%}}
+@keyframes payBlink{0%,100%{opacity:.45}50%{opacity:1}}

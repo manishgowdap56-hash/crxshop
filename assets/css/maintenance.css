@@ -1,0 +1,26 @@
+/* =====================================================================
+   Full-site maintenance overlay (from original).
+   ===================================================================== */
+#siteMaintenanceScreen{position:fixed;inset:0;z-index:99999;overflow:hidden;background:#050b16;color:#f2f4f8;font-family:var(--font-body);display:none;align-items:center;justify-content:center}
+#siteMaintenanceScreen.active{display:flex}
+.site-maintenance-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 34%,rgba(216,183,101,.13),transparent 28%),radial-gradient(circle at 12% 85%,rgba(216,183,101,.07),transparent 30%),linear-gradient(145deg,#08101e,#050a14 58%,#0b111e)}
+.site-maintenance-grid{position:absolute;inset:0;opacity:.32;background-image:linear-gradient(rgba(216,183,101,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(216,183,101,.055) 1px,transparent 1px);background-size:30px 30px;mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent)}
+.site-maintenance-corner{position:absolute;width:72px;height:72px;border-color:rgba(216,183,101,.6);border-style:solid}
+.site-maintenance-corner.tl{top:18px;left:18px;border-width:2px 0 0 2px}
+.site-maintenance-corner.tr{top:18px;right:18px;border-width:2px 2px 0 0}
+.site-maintenance-corner.bl{bottom:18px;left:18px;border-width:0 0 2px 2px}
+.site-maintenance-corner.br{bottom:18px;right:18px;border-width:0 2px 2px 0}
+.site-maintenance-card{position:relative;width:min(430px,calc(100% - 34px));box-sizing:border-box;padding:34px 24px 28px;text-align:center;border:1px solid rgba(216,183,101,.34);border-radius:24px;background:linear-gradient(180deg,rgba(15,25,43,.94),rgba(7,14,26,.97));box-shadow:0 24px 80px rgba(0,0,0,.46)}
+.site-maintenance-logo-wrap{position:relative;width:92px;height:92px;margin:0 auto 23px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.site-maintenance-logo-ring{position:absolute;inset:-8px;border:2px solid transparent;border-top-color:#e0bd35;border-right-color:rgba(224,189,53,.7);border-bottom-color:rgba(224,189,53,.2);border-radius:50%;animation:siteMaintenanceSpin 2.4s linear infinite}
+.site-maintenance-logo{position:relative;width:74px;height:74px;border-radius:50%;object-fit:cover;border:2px solid rgba(224,189,53,.72);background:#0b1425}
+.site-maintenance-kicker{margin:0 0 9px;color:#d8b765;font:900 8px var(--font-mono);letter-spacing:2.3px}
+.site-maintenance-name{margin:0;color:#f3f5f8;font:900 25px/1.15 var(--font-display);letter-spacing:.7px;text-transform:uppercase}
+.site-maintenance-name span{background:linear-gradient(90deg,#e0bd35,#f4df91);-webkit-background-clip:text;background-clip:text;color:transparent}
+.site-maintenance-title{margin:22px 0 8px;color:#eef1f6;font:900 13px var(--font-mono);letter-spacing:2px}
+.site-maintenance-text{margin:0 auto;color:#8d99ae;font:600 9px/1.65 var(--font-mono);letter-spacing:.45px;max-width:340px}
+.site-maintenance-status{display:inline-flex;align-items:center;gap:7px;margin-top:18px;padding:7px 12px;border:1px solid rgba(224,189,53,.3);border-radius:999px;background:rgba(224,189,53,.055);color:#dfc05b;font:900 8px var(--font-mono);letter-spacing:1.35px}
+.site-maintenance-status i{width:6px;height:6px;border-radius:50%;background:#e0bd35;box-shadow:0 0 9px rgba(224,189,53,.9);animation:siteMaintenanceBlink 1.4s ease-in-out infinite}
+@keyframes siteMaintenanceSpin{to{transform:rotate(360deg)}}
+@keyframes siteMaintenanceBlink{0%,100%{opacity:.5}50%{opacity:1}}
+@media(max-width:520px){.site-maintenance-card{padding:30px 18px 24px;border-radius:21px}.site-maintenance-logo-wrap{width:82px;height:82px;margin-bottom:21px}.site-maintenance-logo{width:66px;height:66px}.site-maintenance-name{font-size:22px}.site-maintenance-corner{width:48px;height:48px}}

@@ -1,0 +1,16 @@
+/* ZapUPI result pages (success / failed / timeout). Reuses the existing deposit page look. */
+.zp-result{border:1px solid rgba(105,129,165,.52);border-radius:12px;background:linear-gradient(180deg,#101a2e,#0e182a);padding:20px 14px 16px;text-align:center;box-sizing:border-box}
+.zp-icon{width:64px;height:64px;margin:2px auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;border:2px solid currentColor}
+.zp-result.success .zp-icon{color:var(--green,#22c55e);background:rgba(34,197,94,.12)}
+.zp-result.pending .zp-icon{color:var(--gold,#c9a961);background:rgba(201,169,97,.12)}
+.zp-result.failed .zp-icon{color:var(--red,#f2545b);background:rgba(242,84,91,.12)}
+.zp-title{margin:0 0 6px;font:800 15px var(--font-display,sans-serif);letter-spacing:1.2px;color:#eef1f8}
+.zp-text{margin:0 auto 14px;max-width:340px;color:#8995ad;font:500 11px/1.55 var(--font-body,sans-serif)}
+.zp-grid{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;margin:0 0 14px;padding:11px;border:1px solid #1d2d49;border-radius:9px;background:#0c1628;text-align:left}
+.zp-grid dt{color:#77839a;font:700 8px var(--font-mono,monospace);letter-spacing:1px;align-self:center}
+.zp-grid dd{margin:0;color:#dfe4ee;font:600 11px var(--font-mono,monospace);text-align:right;overflow-wrap:anywhere}
+.zp-status{margin:0 0 10px;color:#d8b765;font:700 9px var(--font-mono,monospace);letter-spacing:.8px}
+.zp-btn{display:flex;align-items:center;justify-content:center;text-decoration:none;box-sizing:border-box}
+.zp-link{display:inline-block;margin-top:12px;color:#8995ad;font:700 9px var(--font-mono,monospace);text-decoration:none;letter-spacing:.8px}
+.zp-link:hover{color:var(--gold,#c9a961)}
+@media (max-width:360px){.zp-grid{grid-template-columns:1fr}.zp-grid dd{text-align:left}}
