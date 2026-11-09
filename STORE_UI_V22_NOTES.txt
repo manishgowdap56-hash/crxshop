@@ -1,0 +1,37 @@
+STORE UI REDESIGN (card layout) — what changed
+==============================================
+Presentation only. NOT touched: api/purchase.php, api/purchase-api.php, assets/js/checkout.js,
+wallet / quantity / order / key-delivery logic, providers, auth, maintenance gate.
+
+Changed / added
+- store.php            new Store markup (header, search, device filter, product cards) + duration picker sheet.
+                       Checkout + delivery modals are unchanged (same ids).
+- assets/js/store.js   rewritten UI layer. Same endpoint (api/products.php), same 5s refresh, same KPStore API.
+                       BUY RESELLER KEY -> duration picker (existing plans/prices) -> existing KPCheckout.
+- assets/css/store.css new .sp-* styles appended (old styles kept).
+- api/products.php     additionally returns per product: image_url, features; top-level links{update_file,feedback}.
+- api/admin/products.php  GET returns image_url + features; save accepts optional `features` (sections).
+- api/admin/product-image.php  NEW: upload/clear product image (PNG/JPG/WEBP, validated like the logo upload).
+- api/admin/settings.php  new action save_store_links (global Update File + Feedback/Video link).
+- admin.php / assets/js/admin.js / admin.css  product image + feature-section fields in the product builder;
+                       "STORE BUTTONS" card in Settings. Image is optimised in the browser (WebP ladder) before upload.
+- includes/schema_compat.php / database/schema.sql  additive columns on products: description, image_path, features
+                       (added automatically on first request; nothing dropped).
+- includes/functions.php  helpers: product_image_url, product_features_decode/clean, store_link_setting.
+- uploads/products/    new folder (needs to be writable; .htaccess blocks script execution).
+
+Behaviour
+- Categories in the filter row = enabled categories from Admin; products/search come from the real catalog.
+- Maintenance product: card stays visible, button becomes disabled "UNDER MAINTENANCE"; checkout cannot open.
+- Update/Feedback buttons use the global links; a button is hidden if its link is empty.
+- Product with 1 plan goes straight to checkout; with several plans a duration sheet opens first
+  (the old Store used a plan dropdown for this step).
+
+REVISION 2 — screenshot-matched layout
+- Top panel: BUY A PLAN + SEARCH PRODUCT + DEVICE FILTER inside one bordered panel (pill search, pill chips).
+- Card: inset 16:9 image frame, green category badge top-right, centred title + diamond divider.
+- Middle: bolt feature rows with accent edge (3 visible, chevron SHOW MORE / SHOW LESS),
+  CHECK UPDATE FILE (cyan) + CHECK VIDEO/FEEDBACK (red), gradient BUY RESELLER KEY.
+- Maintenance: amber card glow, UNDER MAINTENANCE / TEMPORARILY UNAVAILABLE panel over the image,
+  grey disabled UNDER MAINTENANCE button. Product, features and links stay visible.
+- Backend, checkout and purchase files unchanged from revision 1.

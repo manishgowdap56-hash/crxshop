@@ -1,0 +1,20 @@
+MENU REFERENCE MERGE
+====================
+
+The supplied index.html was used only as the visual/reference source for mobile navigation sizing and interaction behavior.
+The reference sizing was merged into the PHP site's existing structure; the HTML file itself was NOT used as the replacement application.
+
+Changes:
+- User PHP drawer mobile width/sizing/spacing aligned to supplied index.html reference.
+- User menu items, icons, profile/logout fit compactly without horizontal scrolling.
+- User menu hover/focus/active/touch states added.
+- Admin menu now has an explicit adminMenu id and aria wiring.
+- Admin drawer click + touch/pointer opening hardened.
+- Admin navigation buttons get hover/focus/active states.
+- Admin drawer mobile sizing compacted to the same reference proportions.
+- Existing PHP/database/auth flows preserved.
+
+Validation:
+- All PHP files: php -l OK
+- app.js: node --check OK
+- admin.js: node --check OK

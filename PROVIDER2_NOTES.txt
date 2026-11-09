@@ -1,0 +1,198 @@
+SECOND API PROVIDER (KEYPANEL gateway) - added alongside the existing DRIPSTORE provider
+
+ROUTING
+  product_plans.provider_key  'primary' (existing DRIPSTORE, default for every existing row) | 'keypanel'
+  orders.provider_key         provider that fulfilled an API order (NULL for old orders)
+  Server reads the provider from the saved plan at purchase time (api/purchase-api.php, api/api/reseller_gateway.php).
+  Existing plans are NOT migrated; existing provider code (includes/reseller_api.php) is untouched.
+
+DOCUMENTED CONTRACT USED (nothing else is called)
+  POST <gateway url>, form-encoded, header x-master-key, fields action=buy, variant_id, quantity (max 10)
+  success {ok:true,key,keys[],order_id,expires_at}  failure {ok:false,error,shortfall?}
+  Not documented (therefore NOT implemented): services list, balance, order status, refill/cancel.
+  => Variant ID is typed in manually (same as the existing provider flow); no live test/balance call;
+     order is completed when the buy response returns keys (provider order_id saved as upstream_order_id).
+
+ADMIN
+  Admin > API Settings: new "API PROVIDER 2" card (name, URL, key, ON/OFF, check configuration, remove key).
+  Admin > Products > duration (API STOCK): "API PROVIDER" dropdown. Disabled providers cannot be newly selected;
+  plans already on a disabled provider keep their assignment.
+  The key is stored in the settings table (same as provider 1) and is never returned by any admin endpoint.
+  Provider 2 is OFF by default until a key is saved and it is switched ON.
+
+SCHEMA (additive, auto-applied by includes/schema_compat.php; nothing dropped or rewritten)
+  + product_plans.provider_key, + orders.provider_key, + settings rows api2_*
+
+FILES
+  New:     includes/providers.php
+  Changed: includes/bootstrap.php, includes/schema_compat.php, database/schema.sql, api/purchase-api.php,
+           api/api/reseller_gateway.php, api/admin/settings.php, api/admin/products.php, api/admin/orders-api.php,
+           admin.php, assets/js/admin.js, assets/css/admin.css
+
+
+DASHBOARD STATS / LIFETIME TOP 5 / USERNAME COPY (v17)
+- api/me.php: ORDERS TODAY, TOTAL ORDERS, TOTAL SPENT now use only orders.status = "completed" (was: every order, incl. failed/pending).
+- dashboard.php: TOP 5 RESELLERS = lifetime SUM(total_price) of completed orders per user (no day/month filter),
+  users with no completed order are not listed, ties broken by key count then user id. Title no longer says "THIS MONTH".
+- Username copy button (data-copy-username = server-rendered authenticated username) in header (all user pages) and profile page.
+  assets/js/app.js: Clipboard API + textarea/execCommand fallback (iOS-safe), "Username copied" toast + button check mark.
+Files: api/me.php, dashboard.php, includes/header.php, profile.php, assets/js/app.js, assets/css/page-fix.css
+
+
+USERNAME COPY BUTTON PLACEMENT FIX (v18)
+- Removed the copy button from the header (includes/header.php is byte-identical to the original again).
+- Exactly ONE copy button remains: Profile page, in a username row to the right of the username (profile.php).
+- Compact VIP pill (assets/css/page-fix.css), inline "COPY" -> "COPIED" feedback (no layout shift), long usernames truncate.
+- assets/js/app.js: handler unchanged in purpose; it copies only data-copy-username (server-rendered authenticated username).
+
+
+PROFILE COPY BUTTON RESTYLE (v19)
+- Cause of the "plain button under the username": the styling was in assets/css/page-fix.css, which header.php links WITHOUT a
+  cache-busting ?v=, so browsers/CDNs kept the old file. Styling now lives in assets/css/profile.css (versioned by file time).
+  page-fix.css is restored to its original content.
+- Button restyled after the My Order copy control (.history-copy): same border/background/text colours, clipboard icon,
+  gold hover + lift, green copied state. One button, same row, right of the username (profile.php).
+- Only profile.php, assets/css/profile.css, assets/css/page-fix.css (restored), assets/js/app.js (icon/label swap) changed.
+
+
+STORE "SELECT DURATION" GLITCH FIX (v20)
+- The white "SELECT DURATION" sheet in the screen recording is the phone browser's NATIVE <select> picker for #storePlan (not a site modal).
+- Cause: assets/js/store.js setInterval(...loadCatalog(true)) every 5s rebuilt all three selects (innerHTML='' + new options) even when the
+  data was unchanged and even while the user had a select (native picker) open; a slow response could also overwrite a newer user choice.
+- Fix (store.js only): background refresh skips unchanged catalogs, never rebuilds a focused select (applies on a later tick),
+  newest-request-wins, selection is read after the response arrives. Post-purchase refresh (KPStore.refresh) still always applies.
+
+
+MAINTENANCE -> ADMIN ACCESS -> LOGIN LOOP FIX (v21)
+- Cause: login.php?admin=1 loaded assets/js/page-entry.js, which sends every reload / first visit to welcome.php?return=<page>.
+  welcome.php runs the maintenance gate for visitors who are not yet logged in, so the (not yet authenticated) admin got the
+  Maintenance page -> ADMIN ACCESS -> login -> refresh -> loop.
+- Fix: (1) login.php does not load page-entry.js on the admin-login route (decided by ?admin=1 on the server, so it survives refresh),
+  (2) page-entry.js also returns early when body[data-admin-login=1], (3) welcome.php forwards a return target of login.php?admin=1
+  straight to the login page before the maintenance gate (target is rebuilt, not echoed).
+- Untouched: maintenance gate/page, user splash behaviour, api/auth-login.php (password + admin_only + maintenance checks), admin.php.
+Files: login.php, welcome.php, assets/js/page-entry.js
+
+
+DASHBOARD DISPLAY (3 SLIDES) + TELEGRAM SUPPORT (v22)
+- Settings keys (existing key/value `settings` table, no schema change): display_slide_1..3 (path under uploads/display/), telegram_username.
+- Upload pipeline = the logo pipeline: browser canvas -> WebP quality ladder (JPEG fallback) -> multipart POST with CSRF header ->
+  server validation identical to save_logo (20 MB cap, PNG/JPG/WEBP, finfo/mime/getimagesize) -> random filename -> path saved in settings.
+  Slides are additionally centre-cropped to the 16:7 frame (never upscaled). Replaced/removed slide files are deleted.
+- api/admin/settings.php: actions save_display (all 3 slides in ONE request, validated first, all-or-nothing) and save_telegram;
+  GET returns display_slides[] and telegram_username.
+- Dashboard: dashboard.php renders the display (only if at least one slide exists) directly above the "Update File" card and the
+  floating SUPPORT button (only if a valid username is saved). assets/css/dashboard-display.css, assets/js/dashboard-display.js (versioned page assets).
+- Telegram: accepts name, @name, t.me/name, https://t.me/name; 5-32 chars, letters/digits/underscore, starts with a letter; opens https://t.me/<name>.
+- uploads/display/.htaccess blocks script execution in the upload folder.
+Files: includes/functions.php, api/admin/settings.php, dashboard.php, admin.php, assets/js/admin.js, assets/css/admin.css,
+       assets/css/dashboard-display.css (new), assets/js/dashboard-display.js (new), uploads/display/.htaccess (new)
+
+
+PANELSTORE PROVIDER ADDED (provider_key 'panelstore', settings api3_*)
+- KEYPANEL (above) and DRIPSTORE (primary) are untouched. PANELSTORE is a further entry in the same registry (includes/providers.php).
+- Documented contract used (nothing else is called): POST JSON {key, action, ...}
+    action=balance                  -> {balance}
+    action=order, pid, quantity     -> success {status:"success", license_key} | failure {status, message}
+  Success is accepted ONLY when status === "success" AND license_key is non-empty. Everything else = failure -> existing refund path.
+- NOT documented, therefore NOT implemented: product list, order/status lookup, provider order id, cancel/refund.
+  * upstream_order_id stays empty for these orders; the site's own order_ref identifies the order.
+  * Quantity is capped at 1 per purchase (the license_key shape for quantity > 1 is not documented). The admin form locks the
+    quantity toggle OFF for PANELSTORE durations, products.php forces allow_quantity=0, and both purchase endpoints reject
+    quantity > 1 BEFORE charging the wallet. To lift: set 'max_quantity' in provider_info() once the provider confirms multi-key output.
+- Admin > API Settings > "API PROVIDER 3": name, URL, key, ON/OFF, SAVE, TEST CONNECTION and CHECK BALANCE (both use the documented
+  read-only balance action; they work while the provider is OFF). Key is stored in settings (api3_master_token), only used server-side,
+  never returned by any endpoint, sent only over https, redirects are not followed.
+- Admin > Products > duration (API STOCK) > API PROVIDER dropdown now lists PANELSTORE API; the ID field becomes "PROVIDER PRODUCT ID (PID)".
+  PID is validated server-side (letters/digits/-/_ , max 40) and stored in product_plans.provider_variant_id.
+- Purchase routing: api/purchase-api.php already reads provider_key from the saved plan and calls provider_generate(); that file is unchanged.
+  api/api/reseller_gateway.php got a PANELSTORE branch + a pre-charge enabled/configured/quantity check.
+- Schema: no new columns. Four settings rows (api3_endpoint, api3_master_token, api3_service_name, api3_provider_enabled; OFF by default)
+  are inserted automatically by includes/schema_compat.php and listed in database/schema.sql.
+- Files: includes/providers.php, includes/schema_compat.php, database/schema.sql, api/admin/settings.php, api/admin/products.php,
+         api/api/reseller_gateway.php, admin.php, assets/js/admin.js, assets/css/admin.css (1 rule).
+- No Store/checkout/user-facing file was modified.
+
+
+LINK PREVIEW / SOCIAL SHARE METADATA
+- Cause: login.php (and register/welcome/maintenance) had only <title>. No meta description, Open Graph, Twitter card, canonical or
+  favicon link existed. Also, the default logo is an SVG, which WhatsApp/Telegram/Facebook do not render as a preview image.
+- New includes/share_meta.php outputs, SERVER-SIDE inside <head>: meta description, canonical, favicon (+apple-touch-icon for raster logos),
+  og:type/url/title/description/image/image:secure_url/image:type/image:width/image:height/image:alt/site_name, twitter:card(summary_large_image)/
+  title/description/image. Name = panel_name(); favicon = panel_logo_url(); URLs are absolute and forced to https (production).
+- Share image is SEPARATE from the header logo: 1200x630 JPEG. With an Admin logo set, it is composed onto the brand canvas (dark green + gold frame)
+  once and cached as uploads/share/share-<hash>.jpg (auto-regenerated when the logo changes). Otherwise / on any failure the shipped
+  assets/images/share-preview.jpg is used. The logo file itself is never modified. Needs PHP GD (standard on cPanel); without GD the shipped image is used.
+- Wired into: login.php, register.php, welcome.php, maintenance.php (so a link shared during maintenance still previews). Each call is wrapped in
+  try/catch, so a problem in the helper can never break a page. No visible UI changed.
+- Optional: settings key share_description overrides the default description text.
+- Canonical = page URL without query string (index/welcome -> site root). Test with ?v=2 only to dodge preview caches; it is not in canonical.
+- .htaccess / robots: checked, nothing blocks crawlers or images (no robots.txt, no hotlink rules, no bot filtering; maintenance returns 200).
+  uploads/share/.htaccess blocks script execution, like uploads/display. Root .htaccess unchanged.
+- Recommended: set APP_URL in config/config.php to https://balamod.store so these URLs never depend on the request Host header.
+- Verify on the live site:  bash tools/verify_share_preview.sh https://balamod.store/login.php
+Files: includes/share_meta.php (new), login.php, register.php, welcome.php, maintenance.php, assets/images/share-preview.jpg (new),
+       uploads/share/.htaccess (new), tools/verify_share_preview.sh (new)
+
+
+PROVIDER 4 ADDED (provider_key 'bantibhaiya', settings api4_*)
+- Provider 1 (primary/DRIPSTORE), 2 (keypanel), 3 (panelstore) are untouched; Provider 4 is a further entry in includes/providers.php.
+- Documented contract used (nothing else is called): POST <url>, form-encoded, header x-master-key, fields
+    api_key, action=buy, product_id (exact PID), duration (duration NAME, e.g. "1 Day"), quantity (1-100).
+  android_id is only needed for device-bound (V1) products; the Store has no android_id input, so those products are NOT supported.
+- The documentation shows the REQUEST only. Response format is not documented, so success is fail-closed: HTTP 2xx, no explicit failure
+  marker (success/ok false, status not success/ok/true/completed), AND at least one real key present (keys/key/license_key/... incl. under "data").
+  Anything else = failure -> existing refund path. If your provider replies in another shape, send a sample response and the parser is adjusted.
+- Duration name sent = the plan's own duration label. To send a different name, write the product ID as  PID|Duration Name  in the admin field.
+- Admin > API Settings > "API PROVIDER 4": name, URL, API KEY, MASTER KEY (x-master-key), ON/OFF, SAVE, CHECK CONFIGURATION, REMOVE KEYS.
+  No balance/test endpoint is documented, so CHECK CONFIGURATION only validates saved settings (nothing is sent). Keys never leave the server.
+  OFF by default; cannot be turned ON until both keys are saved. Both keys are stored in the settings table (api4_api_key, api4_master_token).
+- TLS verification stays ON and redirects are not followed (the supplied example disabled both; not done here because secrets are in the request).
+- Routing: api/purchase-api.php passes the plan's duration label (extra optional argument; other providers ignore it);
+  api/api/reseller_gateway.php got a Provider 4 pre-charge check + upstream branch. api/purchase.php (local stock) is unchanged.
+- Schema: no new columns (provider_key VARCHAR(20) fits). Five api4_* settings rows are inserted automatically (schema_compat.php, schema.sql).
+- Files: includes/providers.php, api/purchase-api.php, api/api/reseller_gateway.php, api/admin/settings.php, api/admin/products.php,
+         includes/schema_compat.php, database/schema.sql, admin.php, assets/js/admin.js. No Store/checkout UI file was modified.
+
+
+PROVIDER 4 STAGING VERIFICATION HELPER
+- tools/verify_provider4.php (CLI only; tools/.htaccess denies HTTP access). `php tools/verify_provider4.php` checks saved settings and the plans mapped to
+  Provider 4 without sending anything. `php tools/verify_provider4.php --buy PID "1 Day" 1` places ONE real order at the provider (it costs provider
+  balance) and prints the sanitized response structure (field names/types/lengths; secrets masked) plus which known key field the parser would find.
+  It never touches the wallet, orders or products.
+
+
+PRODUCT VIDEO + DISPLAY ORDER + ADMIN SEARCH (v28)
+- DB (auto-migrated by includes/schema_compat.php, also in database/schema.sql): products.video_path VARCHAR(255) NULL (new).
+  Product order uses the EXISTING products.sort_order; category order uses the EXISTING categories.sort_order. No data is dropped or reset.
+- Upload: api/admin/product-video.php (admin + CSRF only). Real-content check (MP4 'ftyp' / WebM EBML signature + finfo), random filename
+  uploads/product-videos/p<ID>-v-<24 hex>.mp4|webm, folder has .htaccess denying scripts. No app-level size/length limit: PHP/web-server limits apply
+  (.user.ini + .htaccess now allow 256M upload / 300M post / 600s input+execution time; verify at /api/admin/php-limits.php). Admin browser also test-decodes the file and rejects unplayable codecs.
+- Store: api/products.php returns video_url only when the file exists. store.js has one VideoCtl controller (single active video, tap = pause in place,
+  Play resumes, switching products stops+resets the old one and releases its media, end -> Play state, no storage of any kind). The <video> is created only
+  when Play is tapped (no preload, no autoplay). Sound button is overlaid bottom-right inside the image frame. Products in maintenance show no video.
+- Order: Store lists products by sort_order ASC then id ASC; categories by sort_order then name (unchanged). New product/category with an empty order goes last.
+  Admin: "DISPLAY ORDER" field on the product form, "POS" box on each category card, optional position when creating a category.
+- Admin product list is now sorted in Store order with a #N badge; search box above it (name, case-insensitive, instant); clicking a title or EDIT opens the editor.
+
+
+VIDEO ANTI-DOWNLOAD + ORDER REVIEW (v29)
+- Store video (store.js): no native controls, disablePictureInPicture, disableRemotePlayback, controlsList nodownload/noremoteplayback, draggable=false + dragstart blocked,
+  contextmenu blocked on the video area only, CSS no-select/no-callout. The video URL is never printed in the UI and no download/save/open/copy control exists.
+  NOT a guarantee: the browser must fetch the file to play it, so dev tools / network capture / screen recording can still obtain it.
+- Product Display Order (already in v28, verified in code, unchanged): same field for NEW and EXISTING products (edit loads the current number), #N badge in the list,
+  search + edit + reorder share one path, Store sorts sort_order ASC then id ASC, categories keep their own sort_order. Saving only updates products.sort_order.
+
+
+ADMIN > ALL ORDERS (v30)
+- Reads ONLY existing tables: orders (source website|api, plan_source local|api, provider_key, status completed|pending|failed|refunded), order_keys, product_keys,
+  users (banned, role), products, product_plans. Nothing is copied/duplicated; no new table. Provider is never contacted.
+- api/admin/all-orders.php (GET, admin-only): paginated list (25/page, max 100), global summary, filters (source, status, provider, date, sort), searches
+  (key: indexed prefix first then bounded "contains"; username/user id; order ref or numeric id), view=order (full stored detail), view=user (details + totals,
+  loaded on demand). All values bound as parameters; LIKE wildcards escaped; keys for a page fetched in one query.
+- api/admin/user-ban.php (POST + CSRF, admin-only): sets users.banned to an EXPLICIT value. Existing enforcement unchanged (auth.php signs banned users out, login and
+  reseller gateway reject them). Refuses: self-ban, banning admin accounts, missing value. Orders/keys untouched. Logged with error_log("[admin-audit] ...") because the
+  project has no audit table (none was created).
+- Indexes added (additive, auto): order_keys.idx_ok_external(external_key(100)), product_keys.idx_pk_keyvalue(key_value(100)) for fast key search.
+- UI: nav item "All Orders", page #adminAllOrdersPage (My-Keys-style cards + admin extras), details/user/ban-confirm modals, copy-key button (same as My Keys).
+- Meaning of labels: SOURCE = how the order was placed (WEBSITE store vs reseller API); PROVIDER = how it was fulfilled (Provider 1-4 or Local stock).

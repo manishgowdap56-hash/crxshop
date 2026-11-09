@@ -1,0 +1,33 @@
+LICENCE DASHBOARD (PROVIDER 5) + PER-DURATION ON/OFF   (v34)
+===========================================================
+
+SETUP (Provider 5)
+  Admin -> API Settings -> "API PROVIDER 5"
+    Provider Name : LICENCE DASHBOARD API
+    API Base URL  : https://licencedashboard.shop/api/v1
+    API Token     : paste your token here (stored server-side only, never returned to the browser)
+  Click SAVE, then TEST CONNECTION / CHECK BALANCE (balance.php is read-only), then switch the provider ON.
+  LOAD CATALOG shows catalog.php so you can look up the provider product_id. RECENT KEYS shows history.php.
+  The token is NOT in the code or in this package. If it was ever pasted into a chat/ticket, rotate it at the provider.
+
+MAPPING A DURATION
+  Admin -> Products -> Edit -> duration -> STOCK SOURCE = API STOCK -> API PROVIDER = LICENCE DASHBOARD API
+  PROVIDER PRODUCT ID (stored in the existing product_plans.provider_variant_id column - no new table):
+      76         v2: direct key, no android_id (default)
+      76|v1      v1: device-bound. The buyer is asked for an Android ID at checkout. No Android ID = no purchase, no charge.
+      76|both    defaults to v2. v1 only when explicitly requested (API users: api_version=v1 + android_id).
+  Each order is sent with its own unique idempotency_key (the website order reference).
+  Quantity limit stays the website's own (20 per order); it is NOT raised to the provider's limit.
+
+PER-DURATION ON/OFF
+  Admin -> Products -> Edit: every duration has "DURATION STATUS" ON/OFF (column product_plans.enabled, default ON).
+  OFF = removed from the Store catalog response (api/products.php), from api/api-variants.php and from the reseller gateway
+  variants list, and rejected by every purchase path (purchase.php, purchase-api.php, gateway buy) BEFORE any wallet charge.
+  The product stays visible; its other durations are untouched. Admin always still sees and edits OFF durations.
+  Works identically for local-stock and API-provider durations. Existing durations stay ON.
+
+VERIFY ON THE SERVER (CLI):
+  php tools/verify_licencedashboard.php                    logic self-tests + ON/OFF invariants (sends nothing)
+  php tools/verify_licencedashboard.php --balance          read-only
+  php tools/verify_licencedashboard.php --catalog          read-only
+  php tools/verify_licencedashboard.php --generate 76 1    ONE REAL order (costs provider balance)

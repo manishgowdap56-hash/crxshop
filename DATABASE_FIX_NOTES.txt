@@ -1,0 +1,24 @@
+ROYAL PANEL - DATABASE ERROR FIX NOTES
+
+The error log showed:
+1) MySQL 1044: the configured MySQL user did not have access to the configured database.
+2) MySQL 1045: the configured MySQL username/password was rejected.
+3) MySQL 1146: the settings table did not exist.
+
+Code fixes included in this build:
+- Missing `settings` table is now created automatically by the additive schema compatibility layer.
+- Default settings are inserted only when missing.
+- Schema compatibility runs during application bootstrap before settings are read.
+- Settings cache reload was corrected so saved settings are immediately reflected.
+- Database configuration can now be supplied through these environment variables:
+  ROYALPANEL_DB_HOST
+  ROYALPANEL_DB_NAME
+  ROYALPANEL_DB_USER
+  ROYALPANEL_DB_PASS
+  ROYALPANEL_DB_PORT
+  ROYALPANEL_DB_CHARSET
+
+IMPORTANT:
+A PHP code change cannot manufacture a valid MySQL password or grant privileges on the hosting account. If the server still reports 1044/1045, set DB_NAME/DB_USER/DB_PASS to the actual cPanel MySQL database credentials, and make sure that MySQL user is assigned to the database with the required privileges. The uploaded error log showed a different database/user pair than the credentials currently present in this source package, so those hosting credentials must be reconciled.
+
+No tables or user data are dropped by the compatibility fix.

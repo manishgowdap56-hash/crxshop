@@ -1,0 +1,45 @@
+v35 UPDATE NOTES  (built on v34)
+================================
+
+HOW TO UPDATE
+  1. Back up the database and the site folder.
+  2. Upload/overwrite the files from this ZIP (nothing is deleted, no data is changed).
+  3. Open any page once. The application migrates itself on the first request (CREATE TABLE IF NOT EXISTS / ADD COLUMN
+     IF MISSING, then sets settings.schema_v35 = 1 so it never re-checks). The database user needs the same CREATE/ALTER
+     rights the app already needs for its older auto-migrations.
+     Manual alternative: run database/migration_v35_ops.sql once ("Duplicate column" errors = already done, harmless).
+  4. Admin -> Users -> open an API reseller -> "MARK AS API USER" for every account that should see the Low Balance popup.
+     (Nobody is flagged automatically. An optional backfill query is in the migration file, commented out.)
+
+WHAT IS NEW
+  * Access Key ON/OFF            Admin -> Settings -> Access Key card -> "Require Access Key for Registration".
+                                 Same MySQL setting is read by register.php (shows/hides the field) AND by api/auth-register.php
+                                 (enforces). Default and any read problem = REQUIRED.
+  * Low Balance popup            api/notices.php + assets/js/notices.js. Only users with users.api_enabled = 1, balance < 20.00,
+                                 not acknowledged in the last 24 h (users.lowbal_ack_at). Reset when balance reaches 20.
+  * Price announcements          price_changes + price_change_acks. Recorded by Admin product save from the DATABASE's old price.
+  * Order Failed message         Exact text shown in a modal matching the success popup. Details go to Alerts / Audit.
+  * Refunds exactly once         includes/ops.php order_refund_once (row lock + pending->failed gate + ledger, one transaction).
+  * Uncertain timeouts           Order stays PENDING (no refund, no second generate call) + critical alert; Alerts -> details ->
+                                 "COMPLETE ORDER WITH KEY" or "REFUND ORDER".
+  * Admin Alerts                 New "Alerts" page (search, filters, details, resolve, de-duplicated incidents).
+  * Deposit monitor              Wallet & Deposits: search / status+date filters / pagination / detail view / reconcile.
+  * Audit & Price Log            New page: audit log, price history, archived products (restore).
+  * Product delete               Delete button added to every product card; archives when history exists.
+
+FIXED: PRODUCT DELETE (root cause)
+  The Admin product card had NO delete button/handler at all (only Edit / Key Add / Enable / Maintenance). The backend
+  `delete` action existed but ran a bare DELETE, which fails with a foreign-key error (orders.product_id ... ON DELETE RESTRICT)
+  for any product that has orders. Now: button + confirmation, server-side archive when orders / delivered keys exist,
+  permanent delete only for unused products, media files removed only if unreferenced. Removing a DURATION that has orders
+  now switches it OFF instead of failing with HTTP 500.
+
+KNOWN LIMITS / DECISIONS TO REVIEW
+  * Nothing here was executed against PHP/MySQL/Paytm/the live providers in the build sandbox. See the test report in the reply.
+  * Provider status lookup: Providers 1-4 expose no documented order-status call and Provider 5's history.php response shape is not
+    specified, so "uncertain" orders are held for the admin instead of being auto-resolved.
+  * Reseller gateway (api/api/reseller_gateway.php): response formats are unchanged. Behaviour changes: refunds are exactly-once,
+    an "ok" reply with no key is now a failed+refunded order (it used to create an empty completed order), an uncertain timeout no
+    longer refunds immediately (adds "pending_review": true to the same error), archived products are rejected.
+  * "Complete order with key" does not pay referral commission (it only attaches keys).
+  * Audit/alert tables are not purged automatically.

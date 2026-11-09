@@ -1,0 +1,89 @@
+# =====================================================================
+# ROYAL PANEL — Apache configuration
+# =====================================================================
+
+Options -Indexes
+DirectoryIndex index.php
+
+# ---- Block direct access to sensitive files -------------------------
+<FilesMatch "(^\.|\.sql$|\.md$|\.log$|^config\.php$)">
+    Require all denied
+</FilesMatch>
+
+# ---- Protect /config, /includes, /database --------------------------
+RedirectMatch 403 ^/config/.*$
+RedirectMatch 403 ^/includes/.*$
+RedirectMatch 403 ^/database/.*$
+
+# ---- Security headers -----------------------------------------------
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    # Enable HSTS only when on HTTPS
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+</IfModule>
+
+# ---- PHP upload limits (Product Video upload) -----------------------
+# Applies when PHP runs as an Apache module (mod_php) or under LiteSpeed.
+# On PHP-FPM / CGI / FastCGI hosts these blocks are skipped automatically
+# (no 500 error) and /.user.ini is used instead.
+# post_max_size must stay >= upload_max_filesize.
+<IfModule mod_php.c>
+    php_value upload_max_filesize 256M
+    php_value post_max_size 300M
+    php_value max_input_time 600
+    php_value max_execution_time 600
+</IfModule>
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 256M
+    php_value post_max_size 300M
+    php_value max_input_time 600
+    php_value max_execution_time 600
+</IfModule>
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 256M
+    php_value post_max_size 300M
+    php_value max_input_time 600
+    php_value max_execution_time 600
+</IfModule>
+<IfModule LiteSpeed>
+    php_value upload_max_filesize 256M
+    php_value post_max_size 300M
+    php_value max_input_time 600
+    php_value max_execution_time 600
+</IfModule>
+
+# ---- Gzip ------------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# ---- Long cache for static assets ----------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 7 days"
+    ExpiresByType application/javascript "access plus 7 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+</IfModule>
+
+# ---- Pretty URL for /api/ ------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Don't rewrite real files or directories
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Optional: route /reseller_gateway.php at project root to /api/api/reseller_gateway.php
+    RewriteRule ^reseller_gateway\.php$ api/api/reseller_gateway.php [L,QSA]
+</IfModule>
+
+# ---- Custom error pages --------------------------------------------
+ErrorDocument 403 /login.php
+ErrorDocument 404 /login.php

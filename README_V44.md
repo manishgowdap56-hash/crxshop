@@ -1,0 +1,15 @@
+# v44 – PATO BLUE grouping (glued prefix durations) + no automatic categories
+
+## Verified / not verified
+No PHP, MySQL, network or browser in the build sandbox. **Executed:** `python3 tools/mirror_grouping_check.py` (Python mirror of the duration parser, grouping and category-resolution logic; all checks pass, incl. `15DAYS PATO BLUE` + `30DAYS PATO BLUE` -> one parent "PATO BLUE" with 15 DAYS / 30 DAYS, PATO RED not merged, repeated sync = no duplicates, no category created) and a bracket-balance scan of the edited PHP. **NOT executed:** any PHP/SQL, the merge on a real DB, the provider, the storefront, a purchase. Run on staging: `php -l includes/provider_sync.php`, `php tools/test_provider_sync.php`, `php tools/consolidate_duplicate_products.php --dry-run`.
+
+## 1. Grouping
+v43 only understood a trailing duration ("X 3 DAY") or "7 DAY - X". Your names put the duration FIRST and glued ("15DAYS PATO BLUE"). `splitDuration()` now also accepts `<n>DAYS|HOURS|WEEKS|MONTHS... <Name>`. The glued form is required for the no-separator case, so "3 Months Free Trial Pack" is not split. Grouping is by exact base name only (PATO BLUE, PATO RED and PATO BLUE PRO stay separate). Everything else from v43 (variant = own plan row with its own provider id/price, stable `provider_group_key`, idempotent sync, safe merge with preview, archive instead of delete) is unchanged. Existing "15DAYS PATO BLUE" / "30DAYS PATO BLUE" cards are merged by Admin -> Provider Sync -> PREVIEW MERGE / MERGE DUPLICATE CARDS.
+Added: merged cards now release their group key and, after a clean merge, `UNIQUE (provider_group_key)` is added on `products` when no key is shared (reported as `unique_key`: added / present / not added). The existing `uniq_plan(product_id,duration)` and `uniq_provider_service` stay.
+
+## 2. Categories
+`ProviderSyncService::resolveCategory()` no longer creates anything (the old create-by-name code is deleted). A synced product gets, in order: (1) an EXISTING enabled category with the provider's category name, (2) the first category rule ("keyword => Category") whose category exists, (3) the configured default category, then "New Provider Products", then "Root / Non Root" - whichever already exists, (4) the first enabled category. If the site has no enabled category the product is not created and the error is logged. Matching is case-insensitive, so no duplicate categories. A provider "category" that is really a product name or duration matches nothing and falls to the default. The one-time switch of your default from "New Provider Products" to "Root / Non Root" was removed. Category and product management stay separate; change a product's category in the existing admin product editor.
+**Not done:** categories already created by older syncs are NOT deleted or merged (no marker shows which ones the sync made). Move their products in the editor, then disable/delete the empty categories yourself.
+
+## Files
+Changed: `includes/provider_sync.php`, `tools/test_provider_sync.php`, `tools/mirror_grouping_check.py`. New: `README_V44.md`.

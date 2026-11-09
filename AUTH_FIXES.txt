@@ -1,0 +1,27 @@
+ROYAL PANEL AUTH FIXES
+=======================
+
+1. User registration:
+   - Registration API creates the user and immediately creates the authenticated session.
+   - Successful registration redirects directly to dashboard.php.
+   - Login redirects use the server-returned absolute base URL.
+
+2. Session timeout:
+   - Users and admins are not automatically logged out for inactivity. Sessions persist across normal refreshes/navigation and are ended by explicit logout or cleared browser/session data.
+   - Any authenticated request refreshes last_active_at.
+   - After timeout, the next protected-page request goes to login.php.
+
+3. Admin bootstrap:
+   - config/config.php contains ADMIN_BOOTSTRAP_USERNAME and ADMIN_BOOTSTRAP_PASSWORD.
+   - On an admin login attempt using that configured username, the account is created/synchronized in MySQL.
+   - Only a bcrypt password hash is stored in the users.password_hash column.
+   - The browser never receives the plaintext password from the server.
+   - Change the two bootstrap values in config/config.php before production deployment.
+
+4. Validation:
+   - All PHP files in this package pass `php -l`.
+8. Fixed deployment-subfolder URL detection in includes/functions.php.
+   - The previous base_url() assumed the site lived at the domain root.
+   - If installed at /panel/, registration/login could redirect to /dashboard.php at the domain root, hit the 404 handler, and appear to return to login.
+   - base_url() now preserves the actual application folder for API responses, assets, redirects, Store, API, Dashboard, and admin pages.
+9. Auth redirect now uses location.assign() after successful login/registration.

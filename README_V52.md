@@ -1,0 +1,44 @@
+# v52 - automatic price CORRECTION, price-change cards, restore / add-to-site, removal cards
+
+## 0. What was and was NOT verified (read first)
+The build sandbox had **no PHP, no MySQL, no network, no browser and no provider access**. Executed and passing: `python3 tools/mirror_v52_check.py` (24 checks; a Python *mirror* of the decisions - $1=₹30 conversion, wrong-price detection, card lifecycle and de-duplication on sqlite), `node --check` on the edited JS files, a bracket-balance scan and a lexer scan of the edited PHP. **NOT executed:** `php -l`, any PHP test (`tools/test_v52.php` is new; `tools/test_v50_pending.php` was edited), any SQL, any provider call, any browser/UI test (the new cards and the catalog panel have never been rendered). **Your testing list (section 8 of the task) is therefore NOT done.** Run section 4 below on a staging copy first (back up the DB).
+
+## 1. Price correction (server side)
+- `ProviderSyncService::diff()` now compares, **every cycle**, the website price with *provider USD price × rate* (default 30, converted once from the ORIGINAL provider price; INR-priced items are never converted). Different -> the row is flagged `correct` and `applyChanged()` writes the right price into the existing `product_plans` row. Storefront, product cards, duration selector, Key Generator, checkout and new orders all read `product_plans.price`, so nothing else needed to change.
+- **Override can no longer block it:** `settings()` forces `update_prices = true` and `keep_admin_price = false` (the stored values and the two switches are ignored/removed from the page). The old "keep a price that differs from the provider price" branch for v40/41 rows now corrects as well.
+- Never from bad data: a missing / 0 / invalid / unsupported-currency provider price never corrects (existing rule, kept and covered by the new tests); a failed or incomplete catalog fetch ends the cycle before any price is touched (existing rule).
+- Runs in `cron/provider_sync.php --loop` (10 s target, min 4 s) - unchanged mechanism, so it works with the browser closed **once the cron line is installed** (cannot be verified here). "Actual interval" on the page = max(target, last provider fetch time + 1 s).
+
+## 2. Price-change cards (Provider Sync -> PRICE CHANGES)
+- Same card as All Orders (`.ao-card` / `.ao-list`). Fields: product name + image, product id, service id, variant id, duration, previous website price, provider price (USD), rate, correct calculated INR, final website price, difference (signed), change type, detection time, status (+ error, attempts). Filter ALL / PENDING / SUCCESS / FAILED.
+- Change type: **Increased / Decreased** = the *provider* price went up / down; **Corrected** = the website price was wrong (or rate/currency recalculation) while the provider price did not move.
+- Lifecycle (table `provider_price_history`, new columns added automatically): the card is opened **PENDING** before the write, becomes **SUCCESS** in the same transaction as the price update, or **FAILED** (error kept) if the write fails. A variant has at most one open (pending/failed) card: the same unresolved problem on later cycles updates it (attempts + 1), never duplicates. A card is only written when the selling price really changed or the provider price changed - unchanged cycles write nothing. An open card whose variant is later verified correct is closed.
+
+## 3. Restore / add deleted products; new products; removals
+- **New Provider Products -> tab "PROVIDER CATALOG - ADD / RESTORE"**: REFRESH CATALOG (one read-only, complete provider fetch; throws unless every page was read) lists every provider service that is not active on the website: NEW, **DELETED (archived)**, **DEACTIVATED**, **REMOVED EARLIER**, CONFLICT. Controls: SELECT PRODUCT, SELECT ALL, CLEAR SELECTION, ADD TO SITE / RESTORE PRODUCT (per card), ADD SELECTED TO SITE, REVIEW PRODUCT (read-only detail: provider data, every local record + order counts, conflicts, what would happen), search and filter, "LIVE AFTER ADD" (default Maintenance).
+- Server (`catalogApply`): one fresh provider fetch, then per id: archived -> existing `restoreArchived()`; disabled/removed variant -> `restoreOne()` (one transaction: variant + product re-enabled, price set from provider × rate, card + `sync_logs` entry); unknown id -> the existing verified import (`importPrepare`/`importConfirm`, one product per provider group, one transaction each) with defaults. Mapping conflicts (id active on another card, two active mappings, name clash, wrong parent, invalid id/price, id not on provider) are refused with a clear message; every product gets its own success/failure text. No duplicates: restore re-uses the record; import refuses an id that is already mapped.
+- Why deleted products could not be re-added before: archived products block import by design (conflict `on_archived_product`) and deactivated products are "known", so they never reached the pending list. Both now have a restore path. Permanently deleted ones (no history) already reappeared as pending and can be added with ADD TO SITE.
+- Safety default kept: restored/added products return in **Maintenance** (a product the provider had removed always does) unless "LIVE AFTER ADD" is ticked and the normal go-live checks pass.
+- New products / durations are still only queued (never published silently) - unchanged from v50/v51; they use the same Add to Site / two-step import.
+- **Removals** (unchanged rules: only after a complete non-empty catalog, mass-removal guard, variants disabled, product disabled only when none is enabled, nothing deleted, orders kept). New: **REMOVED tab** with one status card per removed variant (+ RESTORE PRODUCT). **Changed:** a variant that reappears on the provider is **no longer re-enabled automatically**; it waits for the admin (it appears in the catalog list / REMOVED tab).
+
+## 4. Run on staging
+1. `php -l includes/provider_sync.php api/admin/provider-sync.php` and open Admin -> Provider Sync once (adds the columns).
+2. `php tools/test_v52.php`, then `php tools/test_v50_pending.php` and `php tools/test_sync_jobs.php` (staging DB only; the removal tests need an empty staging DB, see their headers).
+3. By hand: set one mapped variant's price wrong (also one with a custom price) -> CHECK NOW -> a card appears (SUCCESS), the price is provider × 30 on store, product card, duration selector, checkout, API. CHECK NOW again -> no second card. Break the DB write (e.g. read-only column) -> one FAILED card, attempts rising.
+4. Archive a mapped product, deactivate another -> New Provider Products -> PROVIDER CATALOG -> REFRESH CATALOG -> select both -> ADD SELECTED TO SITE; select the same again -> "Already on the website".
+5. Turn the provider token off / break it -> the cycle fails, prices and products stay untouched.
+6. Install the cron line (`* * * * * php /path/cron/provider_sync.php --loop`), close the browser, wait, check the cards / "Last successful price sync".
+
+## 5. Limits / decisions to check
+- **Provider rate limit unknown.** Each cycle makes >= 1 full catalog request (all pages). 10 s is the target; the page shows the actual interval. If the provider answers 429 the existing back-off applies. `Retry-After` is not parsed.
+- Hosting: cPanel cron runs once a minute; the loop inside the minute provides the 10 s tick. Shared hosts that kill long CLI processes may effectively give a slower rate.
+- Provider catalog field names are still unconfirmed (`php tools/audit_catalog.php --raw`); the parent/duration grouping - and therefore NEW DURATION detection - depends on them.
+- Prices: your site now always equals provider × rate. A deliberate markup is impossible; if you want one, the rate is the only lever (global). There is no separate markup field.
+- The catalog list is one big read (thousands of rows are fine, but it is an admin-started provider call, not cached). A bulk add of many NEW groups does one import per group (each verified against the catalog fetched at the start of the request; max 60 ids per request, the page sends 40 per request).
+- Bulk-created products have no image/description/features: set them in Admin -> Products afterwards (same as v50).
+- `tools/mirror_v43..v49` remain obsolete. `tools/test_v50_pending.php` line 97-98 was changed to the new rule (override cannot block a correction).
+- A failed card is closed automatically when a later check verifies the price correct; if the variant stops being checked (archived, removed) it can stay FAILED until you act on it.
+
+## 6. Files
+Changed: `includes/provider_sync.php`, `api/admin/provider-sync.php`, `admin.php`, `assets/js/admin-provider-sync.js`, `assets/js/admin-new-provider.js`, `assets/css/provider-sync.css`, `tools/test_v50_pending.php`. New: `README_V52.md`, `database/migration_v52_price_cards.sql` (optional; the app migrates itself), `tools/test_v52.php`, `tools/mirror_v52_check.py`.

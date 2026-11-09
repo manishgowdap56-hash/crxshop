@@ -1,0 +1,36 @@
+PAYTM DEPOSIT INTEGRATION (ported from supplied index.php)
+
+HOW IT WORKS (identical to the source)
+1. User enters an amount on deposit.php. Server validates min/max (settings deposit_min_amount / deposit_max_amount,
+   source defaults 10 / 100000, editable in Admin > Wallet & Deposits).
+2. api/deposits-create.php stores a pending row in `deposits` (method=paytm_qr, unique numeric order id) and returns a UPI QR
+   (upi://pay?pa,pn,am,cu,tn,tr) for that order id.
+3. The page polls api/deposits-status.php every 5s. THE SERVER asks Paytm (securegw.paytm.in getTxnStatus, MID + ORDERID).
+   Only STATUS=TXN_SUCCESS credits the wallet. There is no webhook in the source; none was invented.
+4. Credit happens once: row lock + user lock inside a DB transaction, duplicate Paytm txn id check, guarded UPDATE.
+   The amount credited is the amount Paytm reports. Ledger entry type=deposit is written to wallet_ledger.
+5. Pending stays pending; TXN_FAILURE keeps polling (as in source); unpaid payments expire after 180s (status=expired).
+
+SETUP
+- Admin > Wallet & Deposits > PAYTM DEPOSITS: enter Paytm MID + UPI ID, save, switch ON.
+- Server needs PHP cURL and outbound HTTPS to securegw.paytm.in.
+- Schema changes are additive and applied automatically (deposits.method, gateway_order_id, gateway_txn_id,
+  gateway_status, gateway_response + indexes; new settings rows). No existing data is modified.
+
+FILES
+New:      includes/paytm.php, api/deposits-status.php
+Changed:  includes/bootstrap.php, includes/schema_compat.php, database/schema.sql, config/config.php,
+          api/deposits-create.php, api/deposits-list.php, api/admin/deposits.php, api/admin/settings.php,
+          deposit.php, admin.php, assets/js/deposit.js, assets/js/admin.js
+
+
+SUCCESS-FLOW FIX (verification -> success -> live update)
+- Success UI is shown ONLY after api/deposits-status.php answers SUCCESS (Paytm TXN_SUCCESS + DB credit committed).
+- Sequence copied from index.php: history refresh -> PROCESSING capsule -> wallet re-read from DB (api/me.php)
+  -> 1.5s -> SUCCESS capsule -> 4.2s -> back to form + toast.
+- Balance is never computed in the browser; header, drawer, deposit page, dashboard/profile/checkout balance elements
+  are set from server values.
+- Countdown reaching 0:00 no longer declares failure locally: the server is asked (short grace) and decides.
+- Deposits still PENDING in the DB (Cancel pressed / page reloaded) keep being verified in the background and update live.
+- History status labels: SUCCESS / PENDING / EXPIRED / FAILED (from DB status; admin panel already reads the same DB status).
+Files changed: deposit.php, assets/js/deposit.js, assets/css/deposit.css. Backend untouched (already exactly-once).
